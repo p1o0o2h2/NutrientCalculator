@@ -33,13 +33,13 @@ namespace えいようちゃん
                 columnIndex++;
             }
 
+            int count = 0;
             try
             {
                 workBook.SaveAs(pass);
             }
             catch(Exception e)
             {
-                int count = 0;
                 if(count<3)
                 {
                     //3回エラーになるまでリトライする
@@ -52,30 +52,31 @@ namespace えいようちゃん
                 }
             }
            
-            ///各セルに値をセット、mergeが上手く行ってるか分からない
+            ///各セルに値をセット
            void WorkSheetAddValues(List<string> columns,int columnIndex)
             {
-                int margeStartRange = 0;
+                int margeStartRange =0;
                 for(int i=0;i<columns.Count;i++)
                 {
-                    if (columns[i] == "")
+                    if(margeStartRange>0)
                     {
-                        margeStartRange = i + 1;
+                        if (columns[i] != "")
+                        {
+                            var startCell = workSheet.Cell(margeStartRange+1, columnIndex + 1).Address;
+                            var endCell = workSheet.Cell(i, columnIndex + 1).Address;
+                            workSheet.Range(startCell,endCell).Merge();
+                            margeStartRange = 0;
+                        }
                     }
-                    else if (margeStartRange > 0)
+                    else if(columns[i] == "")
                     {
-                        workSheet.Range(workSheet.Cell(margeStartRange, columnIndex).Address, workSheet.Cell(i, columnIndex).Address);
-                        margeStartRange = 0;
+                        margeStartRange = i;
                     }
                     else
                     {
                         workSheet.Cell(i + 1, columnIndex + 1).Value = columns[i];
-                    }                    
-                }
-                if(margeStartRange>0)
-                {
-                    workSheet.Range(workSheet.Cell(margeStartRange, columnIndex+1).Address, workSheet.Cell(columns.Count, columnIndex+1).Address);
-                }
+                    }
+                }                
             }
         }
     }

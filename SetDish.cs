@@ -81,6 +81,14 @@ namespace えいようちゃん
                 /// 純使用量(g)
                 /// </summary>
                 public float Quantity { get; set; }
+
+                /// <summary>
+                /// 廃棄率(%)
+                /// </summary>
+                public int refuse;
+                [JsonIgnore]
+                public float ContainLoss { get { return Quantity / (1 - refuse); } }
+               
                 /// <summary>
                 /// 表示上の栄養価　順番はデータベース上の栄養素カラムと同じ
                 /// </summary>
@@ -92,7 +100,7 @@ namespace えいようちゃん
                 /// <summary>
                 /// 食品成分表のデータ　順番はデータベース上の栄養素カラムと同じ
                 /// </summary>
-                public List<string> FoodCompositionValue = new List<string>();
+                public List<string> FoodCompositionValue = new List<string> ();
                 //依存関係、下処理の塩コショウとかを紐づけする,未実装
                 public string DependencyFoodName;
                 public int DependencyPercentage;
@@ -103,8 +111,8 @@ namespace えいようちゃん
                     this.Identify = identify;
                     this.Quantity = 0;
                     this.FoodCompositionValue =fc;
+                    this.refuse = int.Parse(fc[(int)NutrientDataColumn.refuse - 1]);
                 }
-
                 public Food() { }
             }
         }       

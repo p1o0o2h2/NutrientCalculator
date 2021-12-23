@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace えいようちゃん
@@ -18,7 +15,7 @@ namespace えいようちゃん
         /// 栄養素の名前と単位、順番はデータベースのカラム順
         /// </summary>
         public static List<string> NutrientsName = new List<string>();        
-        List<CheckBox> DisplayNutrient = new List<CheckBox>();
+        List<CheckBox> CheckBoxes= new List<CheckBox>();
 
         public NutrientsForm()
         {
@@ -34,19 +31,20 @@ namespace えいようちゃん
         /// <param name="e"></param>
         private void NutrientsForm_Activated(object sender, EventArgs e)
         {
-            if(MainForm.File.IndicateNutrient.Count==0)
-            {
-                return;
-            }
+            CheckBoxes[0].Checked = MainForm.File.IsDisplayMaterialQuanatity;
+            if(MainForm.File.IndicateNutrient.Count==0) return;
 
-            int DisplayNutrientIndex = 0;
-            for (int i = NutrientsName.Count - DisplayNutrient.Count; i < NutrientsName.Count; i++)
+            int checkBoxesIndex = 1;
+            int indicateIndex = NutrientsName.Count - (CheckBoxes.Count - 1);
+
+            while(indicateIndex<NutrientsName.Count)
             {
-                if (MainForm.File.IndicateNutrient[i] >= 0)
+                if(MainForm.File.IndicateNutrient[indicateIndex] >= 0)//
                 {
-                    DisplayNutrient[DisplayNutrientIndex].Checked = true;
+                    CheckBoxes[checkBoxesIndex].Checked = true;
                 }
-                DisplayNutrientIndex++;
+                indicateIndex++;
+                checkBoxesIndex++;
             }
         }
 
@@ -128,25 +126,28 @@ namespace えいようちゃん
             int posX = 10;
             int posY = 10;
 
-            for(int i=0;i<NutrientsName.Count;i++)
+            var checkboxTexts = new List<string>{ "粗使用量(g)"};
+            checkboxTexts.AddRange(NutrientsName);
+
+            for(int i=0;i<checkboxTexts.Count;i++)
             {
-                if(!NutrientsName[i].Contains('('))
+                if(!checkboxTexts[i].Contains('('))
                 {
                     continue;
                 }
 
                 CheckBox checkBox = new CheckBox();
-                checkBox.Text = NutrientsName[i];
+                checkBox.Text = checkboxTexts[i];
                 checkBox.Font = new Font("Yu Gothic UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
                 checkBox.Location = new Point(posX, posY);
                 checkBox.Checked = false;
                 checkBox.AutoSize = true;
-                DisplayNutrient.Add(checkBox);
-                this.Controls.Add(DisplayNutrient.Last());
+                CheckBoxes.Add(checkBox);
+                this.Controls.Add(CheckBoxes.Last());
 
-                if (DisplayNutrient.Count!= 0&& DisplayNutrient.Count % 11 == 0)
+                if (CheckBoxes.Count!= 0&& CheckBoxes.Count % 11 == 0)
                 {
-                    posX = DisplayNutrient.Count / 10 * 280 + 10;
+                    posX = CheckBoxes.Count / 10 * 280 + 10;
                     posY = 10;
                 }               
                 else
@@ -154,7 +155,7 @@ namespace えいようちゃん
                     posY += 70;
                 }
 
-                if (i < DisplayNutrient.Count - 2 && (NutrientsName.Count>i+1&&NutrientsName[i+1].Contains("\n")))
+                if (i < CheckBoxes.Count - 2 && (checkboxTexts.Count>i+1&&checkboxTexts[i+1].Contains("\n")))
                 {
                     posY -= 8;
                 }
@@ -168,30 +169,36 @@ namespace えいようちゃん
         /// <param name="e"></param>
         private void DisplayNutrientsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-           while(NutrientsName.Count> MainForm.File.IndicateNutrient.Count)
+            MainForm.File.IsDisplayMaterialQuanatity = CheckBoxes[0].Checked;
+
+           while (NutrientsName.Count> MainForm.File.IndicateNutrient.Count)
            {
                 MainForm.File.IndicateNutrient.Add(0);
            }
 
-           for(int i=0; i< NutrientsName.Count - DisplayNutrient.Count; i++)
-           {
-               MainForm.File.IndicateNutrient[i] = -2;
-           }
+            int indicateIndex = 0;
 
-           int DisplayNutrientIndex = 0;
-           for(int i= NutrientsName.Count - DisplayNutrient.Count;i< NutrientsName.Count;i++)
-           {
-                if (MainForm.File.IndicateNutrient.Count==0||MainForm.File.IndicateNutrient[i] > 0) { /*なし*/}
-                else if (DisplayNutrient[DisplayNutrientIndex].Checked)
+            while(indicateIndex< NutrientsName.Count - (CheckBoxes.Count-1))//粗使用量はNutrientNameと無関係
+            {
+                MainForm.File.IndicateNutrient[indicateIndex] = -2;
+                indicateIndex++;
+            }
+
+            int checkBoxesIndex = 1;
+            while (indicateIndex<MainForm.File.IndicateNutrient.Count)
+            {
+                if (MainForm.File.IndicateNutrient[indicateIndex] > 0) { /*なし*/}
+                else if (CheckBoxes[checkBoxesIndex].Checked)
                 {
-                    MainForm.File.IndicateNutrient[i] = 0;
+                    MainForm.File.IndicateNutrient[indicateIndex] = 0;
                 }
                 else
                 {
-                    MainForm.File.IndicateNutrient[i] = -1;
+                    MainForm.File.IndicateNutrient[indicateIndex] = -1;
                 }
-               DisplayNutrientIndex++;
-           }
+                indicateIndex++;
+                checkBoxesIndex++;
+            }
 
             var _=MainForm.UpdateMainFormAsync();
             this.Visible = false;

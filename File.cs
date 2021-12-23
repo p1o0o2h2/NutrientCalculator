@@ -17,15 +17,16 @@ namespace えいようちゃん
         /// <summary>
         /// 表示する栄養素と基準値 非栄養素=-2、非表示=-1、表示=0、基準あり=その値、栄養素の食品成分表での順番に並んでいる
         /// </summary>
-        public List<float> IndicateNutrient { get; set; } = new List<float>();//
+        public List<float> IndicateNutrient { get; set; } = new List<float>();
 
         public int ServePeople { get; set; } = 1;
         public string FilePath = "";
         public string FileName{ get {return FilePath.Split('\\').Last().Replace(".json", "");} }
         public List<float> SumNutrient = new List<float>();
+        public bool IsDisplayMaterialQuanatity { get; set; } = false;
        
         /// <summary>
-        /// 食品成分表のデータを分量から栄養化を計算する
+        /// 食品成分表のデータを分量から栄養価を計算する
         /// </summary>
         public void CalculateSumNutrient(List<int> nutrientSigFigs)
         {
@@ -51,8 +52,14 @@ namespace えいようちゃん
                 for (int i = 0; i < food.FoodCompositionValue.Count; i++)
                 {
                     string f = food.FoodCompositionValue[i];
-                    string fc = TextMold.ReplaceKAKKO(f);   
-                    if (float.TryParse(fc, out float value))//データが数字かどうか
+                    string fc = TextMold.ReplaceKAKKO(f);
+                    
+                    if(i==(int)NutrientDataColumn.refuse-1)
+                    {
+                        food.CalclateNutrientValue.Add(0);
+                        food.DisplayNutrientValue.Add(f);
+                    }
+                    else if (float.TryParse(fc, out float value))//データが数字かどうか
                     {
                         //一人前あたりの重量/100g(栄養価はそれぞれ100gあたりのデータ)
                         float v = value*food.Quantity / MainForm.File.ServePeople / 100;                       

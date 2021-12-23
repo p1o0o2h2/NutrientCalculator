@@ -34,25 +34,43 @@ namespace えいようちゃん
         /// </summary>
         /// <param name="dataTable"></param>
         /// <param name="indicateIndex">表示する栄養素</param>
-        public void MakeDayTable(List<int> indicateIndex)
+        public void MakeDayTable(List<int> pickup)
         {
             Mode = 2;
             SetDishesIndex = -1;
             DataGridView.DataSource = null;
-            var dataTable = CreateDataTable(indicateIndex);
-            for (int i = 0; i < MainForm.File.SetDishes.Length; i++)
+            var dataTable = CreateDataTable(pickup);
+            var setdishNames = new List<string> {"", "朝食", "昼食", "夕食", "間食" };
+            for (int i = 1; i < MainForm.File.SetDishes.Length; i++)
             {
-                if (MainForm.File.SetDishes[i] == null) continue;
-
+                int columnIndex = 1;
+                int pickupIndex = 0;
                 var nr = dataTable.NewRow();
-                nr.SetField(0, OperateTableFigure.TimingName[i]);
-                for (int j = 1; j < dataTable.Columns.Count; j++)
+                while (columnIndex < dataTable.Columns.Count)
                 {
-                    var value = Math.Round(MainForm.File.SetDishes[i].SumNutrient[indicateIndex[j - 1]], MainForm.NutrientSigFigs[indicateIndex[j - 1]]);
-                    nr.SetField(j, value);
+                    nr.SetField(0, setdishNames[i]);
+                    if (pickup[pickupIndex] == (int)NutrientDataColumn.refuse - 1)
+                    {
+                        pickupIndex++;
+                        continue;
+                    }
+                    var value = Math.Round(MainForm.File.SetDishes[i].SumNutrient[pickup[pickupIndex]], MainForm.NutrientSigFigs[pickup[pickupIndex]]);
+                    nr.SetField(columnIndex, value);
+                    pickupIndex++;
+                    columnIndex++;
                 }
                 dataTable.Rows.Add(nr);
             }
+
+            var sumnr = dataTable.NewRow();
+            sumnr.SetField(0, "合計");
+            for (int i = 0; i < pickup.Count; i++)
+            {               
+                var value = Math.Round(MainForm.File.SumNutrient[pickup[i]], MainForm.NutrientSigFigs[pickup[i]]);
+                sumnr.SetField(i+1, value);
+            }
+            dataTable.Rows.Add(sumnr);
+
             DataGridView.DataSource = dataTable;
             DataGridView.Columns[0].Frozen = true;
             DataGridView.Columns[0].Width = 100;
@@ -63,12 +81,12 @@ namespace えいようちゃん
         /// 一食の表を作る
         /// </summary>
         /// <param name="indicateIndex">表示する栄養素のデータベースのカラム上でのインデックス</param>
-        public void MakeSetTable(int setdishesIndex,List<int> indicateIndex)
+        public void MakeSetTable(int setdishesIndex,List<int> pickup)
         {
             DataGridView.DataSource = null;
             Mode = 1;
             SetDishesIndex = setdishesIndex;
-            var dataTable = CreateDataTable(indicateIndex);
+            var dataTable = CreateDataTable(pickup);
             if (MainForm.File.FileType == (int)FileType.day)
             {
                 dataTable.Columns[0].ColumnName = OperateTableFigure.TimingName[SetDishesIndex];
@@ -81,14 +99,23 @@ namespace えいようちゃん
                 var nr = dataTable.NewRow();
 
                 nr.SetField(0, meals[i].MealName);
-                for (int j = 1; j < dataTable.Columns.Count; j++)
+                int columnIndex = 1;
+                int pickupIndex = 0;
+                while (columnIndex < dataTable.Columns.Count)
                 {
-                    var value = Math.Round(meals[i].SumNutrient[indicateIndex[j - 1]], MainForm.NutrientSigFigs[indicateIndex[j - 1]]);//なんかぬるぽ
-                    nr.SetField(j, value);
-                }
+                    if (pickup[pickupIndex] == (int)NutrientDataColumn.refuse - 1)
+                    {
+                        pickupIndex++;
+                        continue;
+                    }
+                    var value = Math.Round(meals[i].SumNutrient[pickup[pickupIndex]], MainForm.NutrientSigFigs[pickup[pickupIndex]]);
+                    nr.SetField(columnIndex, value);
+                    pickupIndex++;
+                    columnIndex++;
+                }                
                 dataTable.Rows.Add(nr);
             }
-            AddSetDishesSumRow(dataTable, indicateIndex);
+            AddSetDishesSumRow(dataTable, pickup);
             DataGridView.DataSource = dataTable;
             DataGridView.Columns[0].Frozen = true;
             ColumnNotSort();
@@ -104,6 +131,7 @@ namespace えいようちゃん
             Mode = 0;
             SetDishesIndex = setdishesIndex;
 
+            //表の左上(1列目)のカラム名を設定(朝食・ワッフル)
             var dataTable = CreateDataTable(indicateIndex);
             string columnName = "";
             if (MainForm.File.FileType == (int)FileType.day)
@@ -118,22 +146,48 @@ namespace えいようちゃん
                 var nr = dataTable.NewRow();
                 nr.SetField(0, foods[i].ShortName);
                 nr.SetField(1, foods[i].Quantity);
-                for (int j = 2; j < dataTable.Columns.Count; j++)
+
+                int nutrientColumn = 2;
+                if(MainForm.File.IsDisplayMaterialQuanatity)
                 {
-                    nr.SetField(j, foods[i].DisplayNutrientValue[indicateIndex[j - 2]]);                    
+                    nr.SetField(2, foods[i].ContainLoss);
+                    nutrientColumn++;
+                }
+
+                for (int j = nutrientColumn; j < dataTable.Columns.Count; j++)
+                {
+                    nr.SetField(j, foods[i].DisplayNutrientValue[indicateIndex[j - nutrientColumn]]);              
                 }
                 dataTable.Rows.Add(nr);
             }
-            dataTable.Rows.Add(dataTable.NewRow());
+            dataTable.Rows.Add(dataTable.NewRow());//合計行との間に空白を入れる
 
             var meal = MainForm.File.SetDishes[SetDishesIndex].meals[mealIndex];
             var mealsumrow = dataTable.NewRow();
             mealsumrow.SetField(0, meal.MealName);
             mealsumrow.SetField(1, "");
-            for (int i = 2; i < dataTable.Columns.Count; i++)
+
+            int columnIndex = 0;
+            if (MainForm.File.IsDisplayMaterialQuanatity)
             {
-                var value = Math.Round(meal.SumNutrient[i - 2], MainForm.NutrientSigFigs[indicateIndex[i - 2]]);
-                mealsumrow.SetField(i, value);
+                mealsumrow.SetField(columnIndex, "");
+                columnIndex++;
+            }
+
+            for (int i = 0; i < indicateIndex.Count; i++)
+            {
+                if (indicateIndex[i] == (int)NutrientDataColumn.refuse - 1)
+                {
+                    if (Mode == 0)
+                    {
+                        mealsumrow.SetField(columnIndex, "");
+                        columnIndex++;
+                    }
+                    continue;
+                }
+                var value = Math.Round(MainForm.File.SumNutrient[indicateIndex[i]], MainForm.NutrientSigFigs[indicateIndex[i]]);
+                mealsumrow.SetField(columnIndex, value);
+                columnIndex++;
             }
             AddSetDishesSumRow(dataTable, indicateIndex);
 
@@ -161,9 +215,18 @@ namespace えいようちゃん
             if (Mode == 0)//料理に使用する食材の表のみ使用量のカラムを持つ
             {
                 dataTable.Columns.Add(new DataColumn("純使用量\n(g)"));
+                if(MainForm.File.IsDisplayMaterialQuanatity)
+                {
+                    dataTable.Columns.Add(new DataColumn("粗使用量\n(g)"));
+                }
             }
+
             foreach (var p in pickup)
             {
+                if(p==(int)NutrientDataColumn.refuse-1&&Mode!=0)
+                {
+                    continue;
+                }               
                 var name = string.Join("\n(", NutrientsForm.NutrientsName[p].Split("("));
                 dataTable.Columns.Add(new DataColumn(name));
             }
@@ -179,23 +242,34 @@ namespace えいようちゃん
         {
             var sumnr = dt.NewRow();
             sumnr.SetField(0, "合計");
+            int columnIndex = 1;
 
             if (Mode == 0)
             {
-                sumnr.SetField(1, " ");//食材の表の場合のみ存在する純使用量カラムは空にする
-                for (int i = 2; i < dt.Columns.Count; i++)
+                sumnr.SetField(1, " ");//純使用量カラムは空(食材の表の場合のみ存在)
+                columnIndex++;
+                
+                if(MainForm.File.IsDisplayMaterialQuanatity)
                 {
-                    var value = Math.Round(MainForm.File.SumNutrient[indicateIndex[i - 2]], MainForm.NutrientSigFigs[indicateIndex[i - 2]]);
-                    sumnr.SetField(i, value);
+                    sumnr.SetField(columnIndex, "");
+                    columnIndex++;
                 }
             }
-            else
+                        
+            for (int i = 0; i < indicateIndex.Count; i++)
             {
-                for (int i = 1; i < dt.Columns.Count; i++)
+                if (indicateIndex[i]==(int)NutrientDataColumn.refuse-1)
                 {
-                    var value = Math.Round(MainForm.File.SumNutrient[indicateIndex[i - 1]], MainForm.NutrientSigFigs[indicateIndex[i - 1]]);
-                    sumnr.SetField(i, value);
+                    if(Mode == 0)
+                    {
+                        sumnr.SetField(columnIndex, "");
+                        columnIndex++;
+                    }
+                    continue;
                 }
+                var value = Math.Round(MainForm.File.SumNutrient[indicateIndex[i]], MainForm.NutrientSigFigs[indicateIndex[i]]);
+                sumnr.SetField(columnIndex, value);
+                columnIndex++;
             }
             dt.Rows.Add(sumnr);
         }
@@ -224,8 +298,12 @@ namespace えいようちゃん
             int isDay = 0;
             if (MainForm.File.FileType == (int)FileType.day)
             {
-                columnCount += 1;//
+                columnCount ++;//
                 isDay = 1;
+            }
+            if (MainForm.File.IsDisplayMaterialQuanatity)
+            {
+                columnCount++;
             }
 
             AddNewRow();
@@ -233,17 +311,23 @@ namespace えいようちゃん
             {
                 rtn[0][0] = "区分";
             }
-
             rtn[0][0 + isDay] = "献立名";
             rtn[0][1 + isDay] = "食材名";
             rtn[0][2 + isDay] = "純使用量(g)";
 
-            for (int i = 0; i < pickup.Count; i++)
+            int columnIndex = 3;
+            if(MainForm.File.IsDisplayMaterialQuanatity)
             {
-                rtn[0][3 + i + isDay] = NutrientsForm.NutrientsName[pickup[i]];
+                rtn[0][columnIndex + isDay] = "粗使用量(g)";
+                columnIndex=4;
             }
 
-            ///セルの結合をしたかったため
+            for (int i = 0; i < pickup.Count; i++)
+            {
+                rtn[0][columnIndex + i + isDay] = NutrientsForm.NutrientsName[pickup[i]];
+            }
+
+            ///セルの結合をしたかったため縦に
             for (int s = 0; s < MainForm.File.SetDishes.Length; s++)//全体
             {
                 if (MainForm.File.SetDishes[s] == null) continue;
@@ -260,9 +344,14 @@ namespace えいようちゃん
                         rtn.Last()[1 + isDay] = food.Name;
                         rtn.Last()[2 + isDay] = (food.Quantity / MainForm.File.ServePeople).ToString();//表にするとき、分量は一人前
 
+                        if (columnIndex==4)
+                        {
+                            rtn.Last()[3 + isDay] = food.ContainLoss.ToString();
+                        }
+
                         for (int i = 0; i < pickup.Count; i++)
                         {
-                            rtn.Last()[3 + isDay + i] = food.DisplayNutrientValue[pickup[i]];
+                            rtn.Last()[columnIndex + isDay + i] = food.DisplayNutrientValue[pickup[i]];
                         }
                     }
 
@@ -270,16 +359,24 @@ namespace えいようちゃん
                     rtn.Last()[1 + isDay] = "小計";//食材を全て記載したあと料理の全体のデータを載せる
                     for (int i = 0; i < pickup.Count; i++)
                     {
+                        if(pickup[i]==(int)NutrientDataColumn.refuse-1)
+                        {
+                            continue;
+                        }
                         var value = Math.Round(MainForm.File.SetDishes[s].meals[m].SumNutrient[pickup[i]], MainForm.NutrientSigFigs[pickup[i]]).ToString();
-                        rtn.Last()[3 + isDay + i] = value;
+                        rtn.Last()[columnIndex + isDay + i] = value;
                     }
                 }
                 AddNewRow();
                 rtn.Last()[1 + isDay] = "合計";//料理を全て記載したあと一食の全体のデータを載せる
                 for (int i = 0; i < pickup.Count; i++)
                 {
+                    if (pickup[i] == (int)NutrientDataColumn.refuse - 1)
+                    {
+                        continue;
+                    }
                     var value = Math.Round(MainForm.File.SetDishes[s].SumNutrient[pickup[i]], MainForm.NutrientSigFigs[pickup[i]]).ToString();
-                    rtn.Last()[3 + isDay + i] = value;
+                    rtn.Last()[columnIndex+ isDay + i] = value;
                 }
 
             }
@@ -289,8 +386,12 @@ namespace えいようちゃん
                 rtn.Last()[1 + isDay] = "一日の合計";
                 for (int i = 0; i < pickup.Count; i++)
                 {
+                    if (pickup[i] == (int)NutrientDataColumn.refuse - 1)
+                    {
+                        continue;
+                    }
                     var value = Math.Round(MainForm.File.SumNutrient[pickup[i]], MainForm.NutrientSigFigs[i]).ToString();
-                    rtn.Last()[3 + isDay + i] = value;
+                    rtn.Last()[columnIndex + isDay + i] = value;
                 }
             }
             return rtn;

@@ -241,7 +241,6 @@ namespace えいようちゃん
         private void Context_Click(object sender, EventArgs e)
         {
             if(NameQuantityView.CurrentRow==null) return;//どこも選択されてない
-
             MainForm.File.SetDishes[TimingComboBox.SelectedIndex + 1].meals[MealNameComboBox.SelectedIndex].Foods.RemoveAt(NameQuantityView.CurrentRow.Index);
             ReflectNameQuantityView();
             Context.Hide();

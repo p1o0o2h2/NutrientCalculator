@@ -50,7 +50,7 @@ namespace えいようちゃん
         public static List<(int,string)> GetFoodCompositionFoods(int genreNum)
         {
             var rtn = new List<(int, string)>();
-            string SelectSql = $"SELECT [3],[4] FROM FoodComposition.dbo.FoodTable WHERE [1]={genreNum}";
+            string SelectSql = $"SELECT [{(int)NutrientDataColumn.identify}],[{(int)NutrientDataColumn.name}] FROM FoodComposition.dbo.FoodTable WHERE [{(int)NutrientDataColumn.genre}]={genreNum}";
             try 
             {
                 using (var connection = new SqlConnection(connectingString))
@@ -82,7 +82,7 @@ namespace えいようちゃん
         public static List<string> GetFoodCompositionValue(int identify)
         {
             List<string> rtn = new List<string>();
-            string SelectSql = $"SELECT * FROM FoodComposition.dbo.FoodTable WHERE [3]={identify}";
+            string SelectSql = $"SELECT * FROM FoodComposition.dbo.FoodTable WHERE [{(int)NutrientDataColumn.identify}]={identify}";
             
             try
             {

@@ -152,8 +152,8 @@ namespace えいようちゃん
                         for(int f=0;f< File.SetDishes[s].meals[m].Foods.Count;f++)
                         {
                             var food = File.SetDishes[s].meals[m].Foods[f];
-                            food.FoodCompositionValue = ConnectSQL.GetFoodCompositionValue(food.Identify);
-                            food.Name = food.FoodCompositionValue[3];
+                            food.FoodCompositionValue.AddRange(ConnectSQL.GetFoodCompositionValue(food.Identify));
+                            food.Name = food.FoodCompositionValue[(int)NutrientDataColumn.name-1];
                         }
                     }
                 }
@@ -218,13 +218,18 @@ namespace えいようちゃん
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void NutrietsFormOpenButton_Click(object sender, EventArgs e)
-        {      
-            if(NutrientsForm==null)
+        private void NutrietsFormOpenButton_Click(object sender, EventArgs e)//
+        {
+            this.Cursor = Cursors.WaitCursor;
+            while (true)
             {
-                MessageBox.Show($"読み込み中です。少々お待ちください");
+                if(NutrientsForm != null)
+                {
+                    this.Cursor = Cursors.Default;
+                    NutrientsForm.Show();
+                    return;
+                }                
             }
-            NutrientsForm.Show();
         }
 
         /// <summary>
