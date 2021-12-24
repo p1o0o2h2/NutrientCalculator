@@ -286,13 +286,14 @@ namespace えいようちゃん
         }
 
         /// <summary>
-        /// 出力用の表をつくる→ここでいいの？
+        /// 出力用の表をつくる→ここでいいの？ 継承とジェネリックで改良の余地あり
         /// </summary>
         /// <returns>[横列[縦列]]、セルの結合の関係上左上を始点に上から下→一つ右のカラム、という形式にしている</returns>
         public List<List<string>> MakeOverrallTable(List<int> pickup)
         {
             List<List<string>> rtn = new List<List<string>>();
             int columnCount = pickup.Count + 3;//各栄養素と献立名、食材名、純使用量(g)
+            int nutrientStartIndex = 3;
 
             //一日分なら区分(朝食、昼食…)の列が増える
             int isDay = 0;
@@ -307,92 +308,33 @@ namespace えいようちゃん
             }
 
             AddNewRow();
-            if (MainForm.File.FileType == (int)FileType.day)
-            {
-                rtn[0][0] = "区分";
-            }
-            rtn[0][0 + isDay] = "献立名";
-            rtn[0][1 + isDay] = "食材名";
-            rtn[0][2 + isDay] = "純使用量(g)";
+            WriteTableEntry();
 
-            int columnIndex = 3;
-            if(MainForm.File.IsDisplayMaterialQuanatity)
-            {
-                rtn[0][columnIndex + isDay] = "粗使用量(g)";
-                columnIndex=4;
-            }
-
-            for (int i = 0; i < pickup.Count; i++)
-            {
-                rtn[0][columnIndex + i + isDay] = NutrientsForm.NutrientsName[pickup[i]];
-            }
-
+            var setdishNames = new List<string> { "", "朝食", "昼食", "夕食", "間食" };
+            
             ///セルの結合をしたかったため縦に
             for (int s = 0; s < MainForm.File.SetDishes.Length; s++)//全体
             {
                 if (MainForm.File.SetDishes[s] == null) continue;
                 for (int m = 0; m < MainForm.File.SetDishes[s].meals.Count; m++)//一食
                 {
+                    //各食品の栄養素を記入
                     for (int f = 0; f < MainForm.File.SetDishes[s].meals[m].Foods.Count; f++)//一品
                     {
                         AddNewRow();
-                        if (f == 0)//その料理の一番上の行にだけ料理名を入れる
-                        {
-                            rtn.Last()[0 + isDay] = MainForm.File.SetDishes[s].meals[m].MealName;
-                        }
-                        var food = MainForm.File.SetDishes[s].meals[m].Foods[f];
-                        rtn.Last()[1 + isDay] = food.Name;
-                        rtn.Last()[2 + isDay] = (food.Quantity / MainForm.File.ServePeople).ToString();//表にするとき、分量は一人前
-
-                        if (columnIndex==4)
-                        {
-                            rtn.Last()[3 + isDay] = food.ContainLoss.ToString();
-                        }
-
-                        for (int i = 0; i < pickup.Count; i++)
-                        {
-                            rtn.Last()[columnIndex + isDay + i] = food.DisplayNutrientValue[pickup[i]];
-                        }
+                        WriteFoodRow(s,m,f);                       
                     }
-
+                    //一品の合計
                     AddNewRow();
-                    rtn.Last()[1 + isDay] = "小計";//食材を全て記載したあと料理の全体のデータを載せる
-                    for (int i = 0; i < pickup.Count; i++)
-                    {
-                        if(pickup[i]==(int)NutrientDataColumn.refuse-1)
-                        {
-                            continue;
-                        }
-                        var value = Math.Round(MainForm.File.SetDishes[s].meals[m].SumNutrient[pickup[i]], MainForm.NutrientSigFigs[pickup[i]]).ToString();
-                        rtn.Last()[columnIndex + isDay + i] = value;
-                    }
+                    WriteMealSumRow(s,m);
                 }
                 AddNewRow();
-                rtn.Last()[1 + isDay] = "合計";//料理を全て記載したあと一食の全体のデータを載せる
-                for (int i = 0; i < pickup.Count; i++)
-                {
-                    if (pickup[i] == (int)NutrientDataColumn.refuse - 1)
-                    {
-                        continue;
-                    }
-                    var value = Math.Round(MainForm.File.SetDishes[s].SumNutrient[pickup[i]], MainForm.NutrientSigFigs[pickup[i]]).ToString();
-                    rtn.Last()[columnIndex+ isDay + i] = value;
-                }
-
+                WriteSetdishlSumRow(s);
             }
             if (MainForm.File.FileType == (int)FileType.day)//ファイルのタイプが一日分なら、一日の合計を載せる
             {
                 AddNewRow();
-                rtn.Last()[1 + isDay] = "一日の合計";
-                for (int i = 0; i < pickup.Count; i++)
-                {
-                    if (pickup[i] == (int)NutrientDataColumn.refuse - 1)
-                    {
-                        continue;
-                    }
-                    var value = Math.Round(MainForm.File.SumNutrient[pickup[i]], MainForm.NutrientSigFigs[i]).ToString();
-                    rtn.Last()[columnIndex + isDay + i] = value;
-                }
+                WriteDaySumRow();
             }
             return rtn;
 
@@ -404,6 +346,130 @@ namespace えいようちゃん
                     row.Add("");
                 }
                 rtn.Add(row);
+            }
+
+            void WriteTableEntry()
+            {
+                if (MainForm.File.FileType == (int)FileType.day)
+                {
+                    rtn[0][0] = "区分";//mealindex
+                }
+                rtn[0][0 + isDay] = "献立名";//foodindex
+                rtn[0][1 + isDay] = "食材名";
+                rtn[0][2 + isDay] = "純使用量(g)";
+
+                if (MainForm.File.IsDisplayMaterialQuanatity)
+                {
+                    rtn[0][3 + isDay] = "粗使用量(g)";
+                    nutrientStartIndex++;
+                }
+
+                for (int i = 0; i < pickup.Count; i++)
+                {
+                    rtn[0][nutrientStartIndex + isDay + i] = NutrientsForm.NutrientsName[pickup[i]];
+                }
+
+            }
+
+            void WriteFoodRow(int setdishIndex,int mealIndex,int foodIndex)
+            {
+                if (setdishIndex > 0)//一日分,A列
+                {
+                    if (mealIndex == 0)
+                    {
+                        rtn.Last()[0] = setdishNames[setdishIndex];
+                    }
+                    else
+                    {
+                        rtn.Last()[0] = Output.margeSign;
+                    }
+                }
+
+                if (foodIndex == 0)//料理名,B列
+                {
+                    rtn.Last()[0 + isDay] = MainForm.File.SetDishes[setdishIndex].meals[mealIndex].MealName;
+                }
+                else
+                {
+                    rtn.Last()[0 + isDay] = Output.margeSign;
+                }
+
+                var food = MainForm.File.SetDishes[setdishIndex].meals[mealIndex].Foods[foodIndex];
+                rtn.Last()[1 + isDay] = food.Name;
+                rtn.Last()[2 + isDay] = (food.Quantity / MainForm.File.ServePeople).ToString();//表にするとき、分量は一人前
+
+                if (nutrientStartIndex == 4)//粗使用量を記入する
+                {
+                    rtn.Last()[3 + isDay] = food.ContainLoss.ToString();
+                }
+
+                for (int i = 0; i < pickup.Count; i++)
+                {                   
+                    rtn.Last()[nutrientStartIndex + isDay + i] = food.DisplayNutrientValue[pickup[i]];
+                }
+            }
+
+            void WriteMealSumRow(int setdishIndex ,int mealIndex)
+            {
+                if (setdishIndex > 0)//一日分
+                {
+                    rtn.Last()[0] = Output.margeSign;
+                }
+
+                rtn.Last()[0 + isDay] = Output.margeSign;
+                rtn.Last()[1 + isDay] = "小計";
+                rtn.Last()[2 + isDay] = Output.emptySign;
+
+                var meal = MainForm.File.SetDishes[setdishIndex].meals[mealIndex];                
+                if (nutrientStartIndex == 4)//粗使用量を記入する
+                {
+                    rtn.Last()[3 + isDay] =Output.emptySign;
+                }
+
+                for (int i = 0; i < pickup.Count; i++)
+                {
+                    rtn.Last()[nutrientStartIndex + isDay + i] = meal.SumNutrient[pickup[i]].ToString();
+                }
+            }
+
+            void WriteSetdishlSumRow(int setdishIndex)
+            {
+                if (setdishIndex > 0)//一日分
+                {
+                    rtn.Last()[0] = Output.margeSign;
+                }
+
+                rtn.Last()[0 + isDay] = "合計";
+                rtn.Last()[1 + isDay] = Output.emptySign;
+                rtn.Last()[2 + isDay] = Output.emptySign;
+                if (nutrientStartIndex == 4)
+                {
+                    rtn.Last()[3 + isDay] = Output.emptySign;
+                }
+
+                var setdish = MainForm.File.SetDishes[setdishIndex];
+                for (int i = 0; i < pickup.Count; i++)
+                {
+                    rtn.Last()[nutrientStartIndex + isDay + i] = setdish.SumNutrient[pickup[i]].ToString();
+                }
+            }
+
+            void WriteDaySumRow()
+            {
+                rtn.Last()[0] = "一日の合計";
+               for(int i=1;i<nutrientStartIndex;i++)
+                {
+                    rtn.Last()[i] = Output.emptySign;
+                }
+                for (int i = 0; i < pickup.Count; i++)
+                {
+                    if (pickup[i] == (int)NutrientDataColumn.refuse - 1)
+                    {
+                        continue;
+                    }
+                    var value = Math.Round(MainForm.File.SumNutrient[pickup[i]], MainForm.NutrientSigFigs[pickup[i]]).ToString();
+                    rtn.Last()[nutrientStartIndex + isDay + i] = value;
+                }
             }
         }
     }   

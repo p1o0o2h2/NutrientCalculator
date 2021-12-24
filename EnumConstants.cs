@@ -35,6 +35,6 @@
         genre=1,
         identify=3,
         name =4, 
-       refuse=5
+        refuse=5
     }
 }

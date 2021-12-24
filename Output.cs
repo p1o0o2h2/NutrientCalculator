@@ -9,6 +9,8 @@ namespace えいようちゃん
     /// </summary>
     static public class Output
     {
+        static public string  margeSign = "=Marge()";
+        static public string  emptySign = " ";
         /// <summary>
         ///Excelワークシートを作成
         /// </summary>              
@@ -60,15 +62,15 @@ namespace えいようちゃん
                 {
                     if(margeStartRange>0)
                     {
-                        if (columns[i] != "")
+                        if (columns[i] !=margeSign)
                         {
-                            var startCell = workSheet.Cell(margeStartRange+1, columnIndex + 1).Address;
+                            var startCell = workSheet.Cell(margeStartRange, columnIndex + 1).Address;
                             var endCell = workSheet.Cell(i, columnIndex + 1).Address;
                             workSheet.Range(startCell,endCell).Merge();
                             margeStartRange = 0;
                         }
                     }
-                    else if(columns[i] == "")
+                    else if(columns[i] ==margeSign)
                     {
                         margeStartRange = i;
                     }
