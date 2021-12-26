@@ -375,7 +375,7 @@ namespace えいようちゃん
             {
                 if (setdishIndex > 0)//一日分,A列
                 {
-                    if (mealIndex == 0)
+                    if (mealIndex == 0&&foodIndex==0)
                     {
                         rtn.Last()[0] = setdishNames[setdishIndex];
                     }
@@ -404,7 +404,7 @@ namespace えいようちゃん
                 }
 
                 for (int i = 0; i < pickup.Count; i++)
-                {                   
+                {      
                     rtn.Last()[nutrientStartIndex + isDay + i] = food.DisplayNutrientValue[pickup[i]];
                 }
             }
@@ -428,7 +428,8 @@ namespace えいようちゃん
 
                 for (int i = 0; i < pickup.Count; i++)
                 {
-                    rtn.Last()[nutrientStartIndex + isDay + i] = meal.SumNutrient[pickup[i]].ToString();
+                    var value = Math.Round(meal.SumNutrient[pickup[i]], MainForm.NutrientSigFigs[pickup[i]]).ToString();
+                    rtn.Last()[nutrientStartIndex + isDay + i] = value;
                 }
             }
 
@@ -450,7 +451,8 @@ namespace えいようちゃん
                 var setdish = MainForm.File.SetDishes[setdishIndex];
                 for (int i = 0; i < pickup.Count; i++)
                 {
-                    rtn.Last()[nutrientStartIndex + isDay + i] = setdish.SumNutrient[pickup[i]].ToString();
+                    var value = Math.Round(setdish.SumNutrient[pickup[i]],MainForm.NutrientSigFigs[pickup[i]]).ToString();
+                    rtn.Last()[nutrientStartIndex + isDay + i] = value;
                 }
             }
 

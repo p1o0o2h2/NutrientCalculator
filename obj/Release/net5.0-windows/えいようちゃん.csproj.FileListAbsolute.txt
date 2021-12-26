@@ -32,7 +32,6 @@ C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Rele
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\えいようちゃん.AssemblyInfoInputs.cache
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\えいようちゃん.AssemblyInfo.cs
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\えいようちゃん.csproj.CoreCompileInputs.cache
-C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\えいようちゃん.csproj.CopyComplete
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\えいようちゃん.dll
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\ref\えいようちゃん.dll
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\えいようちゃん.pdb

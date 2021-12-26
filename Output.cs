@@ -67,6 +67,7 @@ namespace えいようちゃん
                             var startCell = workSheet.Cell(margeStartRange, columnIndex + 1).Address;
                             var endCell = workSheet.Cell(i, columnIndex + 1).Address;
                             workSheet.Range(startCell,endCell).Merge();
+                            workSheet.Cell(i + 1, columnIndex + 1).Value = columns[i];
                             margeStartRange = 0;
                         }
                     }
