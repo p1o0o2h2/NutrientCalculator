@@ -29,9 +29,9 @@ namespace えいようちゃん
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ResultDataGridView = new System.Windows.Forms.DataGridView();
             this.SetDishMealFormOpenButton = new System.Windows.Forms.Button();
@@ -41,8 +41,8 @@ namespace えいようちゃん
             this.ReferenceValueFormOpenButton = new System.Windows.Forms.Button();
             this.NutrientsFormOpenButton = new System.Windows.Forms.Button();
             this.InportFileButton = new System.Windows.Forms.Button();
+            this.NewFileButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
-            this.OverwritteButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ResultDataGridView)).BeginInit();
             this.SuspendLayout();
@@ -64,9 +64,9 @@ namespace えいようちゃん
             this.tableLayoutPanel1.Controls.Add(this.TableFigureCleanupButton, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.ReferenceValueFormOpenButton, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.NutrientsFormOpenButton, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.InportFileButton, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.SaveButton, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.OverwritteButton, 5, 0);
+            this.tableLayoutPanel1.Controls.Add(this.SaveButton, 5, 0);
+            this.tableLayoutPanel1.Controls.Add(this.NewFileButton, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.InportFileButton, 4, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -82,36 +82,36 @@ namespace えいようちゃん
             // 
             this.ResultDataGridView.AllowUserToAddRows = false;
             this.ResultDataGridView.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Yu Gothic UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ResultDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Yu Gothic UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ResultDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.ResultDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.tableLayoutPanel1.SetColumnSpan(this.ResultDataGridView, 4);
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ResultDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.ResultDataGridView.DefaultCellStyle = dataGridViewCellStyle5;
             this.ResultDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResultDataGridView.Location = new System.Drawing.Point(3, 60);
             this.ResultDataGridView.Name = "ResultDataGridView";
             this.ResultDataGridView.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ResultDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ResultDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.ResultDataGridView.RowHeadersVisible = false;
             this.ResultDataGridView.RowHeadersWidth = 62;
             this.ResultDataGridView.RowTemplate.Height = 33;
@@ -188,7 +188,7 @@ namespace えいようちゃん
             // 
             // InportFileButton
             // 
-            this.InportFileButton.Location = new System.Drawing.Point(504, 3);
+            this.InportFileButton.Location = new System.Drawing.Point(671, 3);
             this.InportFileButton.Name = "InportFileButton";
             this.InportFileButton.Size = new System.Drawing.Size(161, 51);
             this.InportFileButton.TabIndex = 4;
@@ -196,25 +196,25 @@ namespace えいようちゃん
             this.InportFileButton.UseVisualStyleBackColor = true;
             this.InportFileButton.Click += new System.EventHandler(this.InportFileButton_Click);
             // 
+            // NewFileButton
+            // 
+            this.NewFileButton.Location = new System.Drawing.Point(504, 3);
+            this.NewFileButton.Name = "NewFileButton";
+            this.NewFileButton.Size = new System.Drawing.Size(161, 51);
+            this.NewFileButton.TabIndex = 1;
+            this.NewFileButton.Text = "新規ファイル";
+            this.NewFileButton.UseVisualStyleBackColor = true;
+            this.NewFileButton.Click += new System.EventHandler(this.NewFileButton_Click);
+            // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(671, 3);
+            this.SaveButton.Location = new System.Drawing.Point(838, 3);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(161, 51);
-            this.SaveButton.TabIndex = 1;
-            this.SaveButton.Text = "名前を付けて保存";
+            this.SaveButton.TabIndex = 15;
+            this.SaveButton.Text = "保存";
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
-            // 
-            // OverwritteButton
-            // 
-            this.OverwritteButton.Location = new System.Drawing.Point(838, 3);
-            this.OverwritteButton.Name = "OverwritteButton";
-            this.OverwritteButton.Size = new System.Drawing.Size(161, 51);
-            this.OverwritteButton.TabIndex = 15;
-            this.OverwritteButton.Text = "上書き保存";
-            this.OverwritteButton.UseVisualStyleBackColor = true;
-            this.OverwritteButton.Click += new System.EventHandler(this.OverwritteButton_Click);
             // 
             // MainForm
             // 
@@ -238,11 +238,11 @@ namespace えいようちゃん
         private System.Windows.Forms.Button TableFigureCleanupButton;
         private System.Windows.Forms.Button OutputButton;
         private System.Windows.Forms.Button FoodFormOpenButton;
-        private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.Button NewFileButton;
         private System.Windows.Forms.Button ReferenceValueFormOpenButton;
         private System.Windows.Forms.Button InportFileButton;
         private System.Windows.Forms.Button NutrientsFormOpenButton;
-        private System.Windows.Forms.Button OverwritteButton;
+        private System.Windows.Forms.Button SaveButton;
     }
 }
 

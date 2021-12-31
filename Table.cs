@@ -28,7 +28,14 @@ namespace えいようちゃん
         {           
             DataGridView = _dataGridView;
         }
-            
+        
+        /// <summary>
+        /// 表をリセットする
+        /// </summary>
+        public void ClearTable()
+        {
+            DataGridView.DataSource = null;
+        }
         /// <summary>
         /// 一日の表をつくる
         /// </summary>
@@ -41,8 +48,11 @@ namespace えいようちゃん
             DataGridView.DataSource = null;
             var dataTable = CreateDataTable(pickup);
             var setdishNames = new List<string> {"", "朝食", "昼食", "夕食", "間食" };
+
             for (int i = 1; i < MainForm.File.SetDishes.Length; i++)
             {
+                if (MainForm.File.SetDishes[i] == null|| MainForm.File.SetDishes[i].SumNutrient.Count==0) continue;
+
                 int columnIndex = 1;
                 int pickupIndex = 0;
                 var nr = dataTable.NewRow();

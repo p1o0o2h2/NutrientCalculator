@@ -133,11 +133,10 @@ namespace えいようちゃん
                     var _=UpdateMainFormAsync();
                     this.Text = File.FileName;                
                     this.Cursor = Cursors.Default;
-                    OperateTableFigure.SetDefaltTableFigure();
                 }
                 catch (Exception exception)
                 {
-                    MessageBox.Show($"ファイルが開けません\n{exception.Message}");
+                    MessageBox.Show($"ファイルが開けません\n{exception.Message}{exception.StackTrace}");
                 }
             }
 
@@ -165,47 +164,59 @@ namespace えいようちゃん
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SaveButton_Click(object sender, EventArgs e)
-        {            
-            SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filter = "JSONファイル|*.json";            
-            dialog.InitialDirectory = File.FilePath;
-            DialogResult dialogResult = dialog.ShowDialog();
-
-            if (dialogResult == DialogResult.OK)
+        private void NewFileButton_Click(object sender, EventArgs e)
+        {
+            if (File.FilePath != "")
             {
                 try
                 {
                     this.Cursor = Cursors.WaitCursor;
-                    Json.ExportFile(dialog.FileName);
-                    File.FilePath = dialog.FileName;
+                    Json.ExportFile(File.FilePath);
                     this.Cursor = Cursors.Default;
                 }
-                catch (Exception exception)
+                catch
                 {
-                    MessageBox.Show($"保存に失敗しました\n{exception.Message}");
+                    MessageBox.Show("開いているファイルの保存に失敗しました");
                 }
             }
+            File = new File();
+            this.Text = File.FileName;
+            OperateTableFigure.SetDefaltTableFigure();
+
         }
 
         /// <summary>
-        /// 上書き保存
+        /// 保存　Fileにパスがない場合は名前を付けて保存、ある場合は上書き
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OverwritteButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
-            if(File.FilePath=="")
-            {
-                MessageBox.Show("ファイルに名前を付けて保存してください");
-                return;
-            }
             try
             {
-                this.Cursor = Cursors.WaitCursor;
-                Json.ExportFile(File.FilePath);
+                if (File.FilePath == "")
+                {
+                    SaveFileDialog dialog = new SaveFileDialog();
+                    dialog.Filter = "JSONファイル|*.json";
+                    dialog.InitialDirectory = File.FilePath;
+                    DialogResult dialogResult = dialog.ShowDialog();
+
+                    if (dialogResult == DialogResult.OK)
+                    {
+                        this.Cursor = Cursors.WaitCursor;
+                        Json.ExportFile(dialog.FileName);
+                        File.FilePath = dialog.FileName;
+                        this.Cursor = Cursors.Default;
+                        this.Text = File.FileName;
+                    }
+                }
+                else
+                {
+                    this.Cursor = Cursors.WaitCursor;
+                    Json.ExportFile(File.FilePath);
+                    this.Cursor = Cursors.Default;
+                }
                 MessageBox.Show("保存しました");
-                this.Cursor = Cursors.Default;
             }
             catch (Exception exception)
             {

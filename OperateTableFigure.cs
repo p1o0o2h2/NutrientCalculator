@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -26,9 +27,14 @@ namespace えいようちゃん
         /// </summary>
         public void SetDefaltTableFigure()
         {
-            if (MainForm.File == null || MainForm.File.SumNutrient.Count == 0) return;
-            var pickup = PickupIndicateNutrient();
             Figure.ClearChart();
+            if (MainForm.File == null || MainForm.File.SetDishes.All(sd=>sd==null))
+            {
+                Table.ClearTable();
+                return;
+            }
+            var pickup = PickupIndicateNutrient();
+
             if (MainForm.File.FileType == (int)FileType.day)
             {
                 Table.MakeDayTable(pickup);

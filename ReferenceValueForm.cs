@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace えいようちゃん
@@ -29,6 +25,7 @@ namespace えいようちゃん
             NutrientDataGridView.Rows.Clear();
             for (int i = 0; i < MainForm.File.IndicateNutrient.Count; i++)
             {
+                if (i == (int)NutrientDataColumn.refuse) continue;
                 if (MainForm.File.IndicateNutrient[i]==0)
                 {
                     NutrientDataGridView.Rows.Add(i, NutrientsForm.NutrientsName[i], "なし");
@@ -69,13 +66,17 @@ namespace えいようちゃん
         private void NutrientDataGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             var dgv = (DataGridView)sender;
+            var changeCell= dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var input = e.FormattedValue.ToString();
 
-            if (e.RowIndex==dgv.NewRowIndex||!dgv.IsCurrentCellDirty) return;
-            var v = NutrientDataGridView.Rows[e.RowIndex].Cells[2].Value.ToString();
-            if (v!="なし"&&!int.TryParse(v, out int _))
+            if (changeCell.Value.ToString() == input) return;
+
+            if(!float.TryParse(input,out float _))
             {
                 MessageBox.Show("半角数字で入力してください");
-                e.Cancel = true;
+                dgv.CancelEdit();
+                e.Cancel=true;
+                return;
             }
         }
     }
