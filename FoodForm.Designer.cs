@@ -145,7 +145,7 @@ namespace えいようちゃん
             this.NameQuantityView.TabIndex = 11;
             this.NameQuantityView.Visible = false;
             this.NameQuantityView.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.NameQuantityView_CellMouseUp);
-            this.NameQuantityView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.NameQuantityView_CellValueChanged);
+            this.NameQuantityView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.NameQuantityView_CellValidating);
             // 
             // FoodName
             // 

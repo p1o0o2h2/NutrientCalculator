@@ -49,6 +49,12 @@ namespace えいようちゃん
             //食品の栄養価を算出
             void SetCalclateNutrientValue(SetDish.Meal.Food food)
             {
+                while(food.FoodCompositionValue.Count>food.CalclateNutrientValue.Count)
+                {
+                    food.CalclateNutrientValue.Add(0);
+                    food.DisplayNutrientValue.Add(" ");
+                }
+
                 for (int i = 0; i < food.FoodCompositionValue.Count; i++)
                 {
                     string f = food.FoodCompositionValue[i];
@@ -56,25 +62,25 @@ namespace えいようちゃん
                     
                     if(i==(int)NutrientDataColumn.refuse-1)
                     {
-                        food.CalclateNutrientValue.Add(0);
-                        food.DisplayNutrientValue.Add(f);
+                        food.CalclateNutrientValue[i]=0;
+                        food.DisplayNutrientValue[i] = f;
                     }
                     else if (float.TryParse(fc, out float value))//データが数字かどうか
                     {
                         //一人前あたりの重量/100g(栄養価はそれぞれ100gあたりのデータ)
                         float v = value*food.Quantity / MainForm.File.ServePeople / 100;                       
-                        food.CalclateNutrientValue.Add(v);                       
-                        food.DisplayNutrientValue.Add(TextMold.MakeDisplayNutrientValue(v,nutrientSigFigs[i]));
+                        food.CalclateNutrientValue[i] = v;                       
+                        food.DisplayNutrientValue[i]=TextMold.MakeDisplayNutrientValue(v,nutrientSigFigs[i]);
                     }
                     else if (fc == "Tr" || fc == "-" || fc == "(0)")//Tr=微量、-=なし、(0)=測ってないけど理論上0,そのまま書かないといけない
                     {
-                        food.CalclateNutrientValue.Add(0);
-                        food.DisplayNutrientValue.Add(fc);
+                        food.CalclateNutrientValue[i] = 0;
+                        food.DisplayNutrientValue[i] = fc;
                     }
                     else//名前とか、栄養素じゃないもの
                     {
-                        food.CalclateNutrientValue.Add(-1);
-                        food.DisplayNutrientValue.Add(fc);
+                        food.CalclateNutrientValue[i] = -1;
+                        food.DisplayNutrientValue[i] = fc;
                     }
                 }
             }

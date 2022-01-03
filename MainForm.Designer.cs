@@ -40,9 +40,10 @@ namespace えいようちゃん
             this.TableFigureCleanupButton = new System.Windows.Forms.Button();
             this.ReferenceValueFormOpenButton = new System.Windows.Forms.Button();
             this.NutrientsFormOpenButton = new System.Windows.Forms.Button();
-            this.InportFileButton = new System.Windows.Forms.Button();
-            this.NewFileButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
+            this.NewFileButton = new System.Windows.Forms.Button();
+            this.InportFileButton = new System.Windows.Forms.Button();
+            this.OutputSettingFormOpenButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ResultDataGridView)).BeginInit();
             this.SuspendLayout();
@@ -67,6 +68,7 @@ namespace えいようちゃん
             this.tableLayoutPanel1.Controls.Add(this.SaveButton, 5, 0);
             this.tableLayoutPanel1.Controls.Add(this.NewFileButton, 3, 0);
             this.tableLayoutPanel1.Controls.Add(this.InportFileButton, 4, 0);
+            this.tableLayoutPanel1.Controls.Add(this.OutputSettingFormOpenButton, 4, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -118,7 +120,7 @@ namespace えいようちゃん
             this.ResultDataGridView.Size = new System.Drawing.Size(662, 659);
             this.ResultDataGridView.TabIndex = 6;
             this.ResultDataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ResultDataGridView_CellDoubleClick);
-            this.ResultDataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.ResultDataGridView_CellValueChanged);
+            this.ResultDataGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.ResultDataGridView_CellValidating);
             // 
             // SetDishMealFormOpenButton
             // 
@@ -186,15 +188,15 @@ namespace えいようちゃん
             this.NutrientsFormOpenButton.UseVisualStyleBackColor = true;
             this.NutrientsFormOpenButton.Click += new System.EventHandler(this.NutrietsFormOpenButton_Click);
             // 
-            // InportFileButton
+            // SaveButton
             // 
-            this.InportFileButton.Location = new System.Drawing.Point(671, 3);
-            this.InportFileButton.Name = "InportFileButton";
-            this.InportFileButton.Size = new System.Drawing.Size(161, 51);
-            this.InportFileButton.TabIndex = 4;
-            this.InportFileButton.Text = "ファイルを開く";
-            this.InportFileButton.UseVisualStyleBackColor = true;
-            this.InportFileButton.Click += new System.EventHandler(this.InportFileButton_Click);
+            this.SaveButton.Location = new System.Drawing.Point(838, 3);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(161, 51);
+            this.SaveButton.TabIndex = 15;
+            this.SaveButton.Text = "保存";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
             // NewFileButton
             // 
@@ -206,15 +208,25 @@ namespace えいようちゃん
             this.NewFileButton.UseVisualStyleBackColor = true;
             this.NewFileButton.Click += new System.EventHandler(this.NewFileButton_Click);
             // 
-            // SaveButton
+            // InportFileButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(838, 3);
-            this.SaveButton.Name = "SaveButton";
-            this.SaveButton.Size = new System.Drawing.Size(161, 51);
-            this.SaveButton.TabIndex = 15;
-            this.SaveButton.Text = "保存";
-            this.SaveButton.UseVisualStyleBackColor = true;
-            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            this.InportFileButton.Location = new System.Drawing.Point(671, 3);
+            this.InportFileButton.Name = "InportFileButton";
+            this.InportFileButton.Size = new System.Drawing.Size(161, 51);
+            this.InportFileButton.TabIndex = 4;
+            this.InportFileButton.Text = "ファイルを開く";
+            this.InportFileButton.UseVisualStyleBackColor = true;
+            this.InportFileButton.Click += new System.EventHandler(this.InportFileButton_Click);
+            // 
+            // OutputSettingFormOpenButton
+            // 
+            this.OutputSettingFormOpenButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.OutputSettingFormOpenButton.Location = new System.Drawing.Point(671, 725);
+            this.OutputSettingFormOpenButton.Name = "OutputSettingFormOpenButton";
+            this.OutputSettingFormOpenButton.Size = new System.Drawing.Size(161, 45);
+            this.OutputSettingFormOpenButton.TabIndex = 16;
+            this.OutputSettingFormOpenButton.Text = "出力設定";
+            this.OutputSettingFormOpenButton.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -243,6 +255,7 @@ namespace えいようちゃん
         private System.Windows.Forms.Button InportFileButton;
         private System.Windows.Forms.Button NutrientsFormOpenButton;
         private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.Button OutputSettingFormOpenButton;
     }
 }
 

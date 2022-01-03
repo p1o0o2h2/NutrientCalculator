@@ -86,7 +86,7 @@ namespace えいようちゃん
             {
                 if(Table.Mode==2)
                 {
-                    Table.MakeSetTable(rowIndex,PickupIndicateNutrient());
+                    Table.MakeSetTable(rowIndex+1,PickupIndicateNutrient());
                 }
                 else if (Table.Mode == 1)
                 {
@@ -112,6 +112,7 @@ namespace えいようちゃん
         /// <param name="clickedIndex">クリックされたPoint</param>
         public void FigureCilcked(int clickedIndex)
         {
+            if (MainForm.File.SumNutrient.Count == 0) return;
             if(clickedIndex==-1)
             {
                 Figure.MakeCompareChart(PickupIndicateNutrient());

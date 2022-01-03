@@ -84,7 +84,7 @@ namespace えいようちゃん
             var foodList = pickupFood_Index.OrderByDescending(f => f.Item1.CalclateNutrientValue[nutrientIndex]).ToList();
             if (foodList.Count>9)
             {
-                foodList.RemoveRange(9, foodList.Count - 1);
+                foodList.RemoveRange(9, foodList.Count - 9);
             }
             foodList.Reverse();
 

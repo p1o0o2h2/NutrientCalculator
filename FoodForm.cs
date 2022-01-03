@@ -193,28 +193,41 @@ namespace えいようちゃん
         }
 
         /// <summary>
-        /// 食品の使用量を入力
+        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void NameQuantityView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if(NameQuantityView.RowCount==0||e.ColumnIndex==0) return;//最初の列(=タイトル)名前(ColumnIndex==0)の場合処理しない
 
-            var qs = NameQuantityView[1, e.RowIndex].Value.ToString();
+        }
 
-            if (!float.TryParse(qs ,out float quantity))
+
+        /// <summary>
+        /// 食品の使用量を入力
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NameQuantityView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            var dgv = (DataGridView)sender;
+            var changeCell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var input = e.FormattedValue.ToString();
+
+            if (changeCell.Value.ToString() == input) return;
+
+            if (float.TryParse(input, out float q))
             {
-                NameQuantityView[1, e.ColumnIndex].Value = "";
-                MessageBox.Show("使用量は半角数字で記入してください");
+                var food = MainForm.File.SetDishes[TimingComboBox.SelectedIndex + 1].meals[MealNameComboBox.SelectedIndex].Foods[e.RowIndex];
+                food.Quantity = q;
+            }
+            else
+            {
+                MessageBox.Show("半角数字で入力してください");
+                dgv.CancelEdit();
+                e.Cancel = true;
                 return;
             }
-            var foods = MainForm.File.SetDishes[TimingComboBox.SelectedIndex + 1].meals[MealNameComboBox.SelectedIndex].Foods;
-
-            if(foods.Count>e.RowIndex)
-            {
-                foods[e.RowIndex].Quantity = quantity;
-            }           
         }
 
         /// <summary>

@@ -298,40 +298,46 @@ namespace えいようちゃん
             OperateTableFigure.TableClicked(e.RowIndex,e.ColumnIndex);
         }
 
-        private void ResultDataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void ResultDataGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if(ResultDataGridView.Columns[1].HeaderText!= "純使用量\n(g)")
+            if (ResultDataGridView.Columns[1].HeaderText != "純使用量\n(g)") return;
+
+            var dgv = (DataGridView)sender;
+            var changeCell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var input = e.FormattedValue.ToString();
+
+            if (changeCell.Value.ToString() == input) return;
+
+            if (float.TryParse(input, out float q))
             {
-                return;
-            }
-            var food = SearchChangedFood();
-            if (float.TryParse(ResultDataGridView[e.RowIndex, e.ColumnIndex].Value.ToString(), out float quantity))
-            {
-                food.Quantity = quantity;
+                var food =SearchChangedFood();
+                food.Quantity = q;
+                var _ = UpdateMainFormAsync();
             }
             else
             {
-                MessageBox.Show("使用量は半角数字で記入してください");
-                ResultDataGridView[e.RowIndex, e.ColumnIndex].Value = food.Quantity;
+                MessageBox.Show("半角数字で入力してください");
+                dgv.CancelEdit();
+                e.Cancel = true;
                 return;
             }
 
             SetDish.Meal.Food SearchChangedFood()
             {
-                 List<string> TimingName = new List<string> { "朝食", "昼食", "夕食", "間食" };
+                List<string> TimingName = new List<string> { "", "朝食", "昼食", "夕食", "間食" };
                 int setdishesIndex = 0;
                 int mealIndex = 0;
-                var mealName = ResultDataGridView[0, 0].Value.ToString();
-                if(File.FileType==(int)FileType.day)
+                var mealName = ResultDataGridView.Columns[0].HeaderText;
+                if (File.FileType == (int)FileType.day)
                 {
-                    var s = mealName.Split('・')[0];
-                    setdishesIndex = TimingName.IndexOf(s);
-                    mealName = mealName.Replace(s+ '・',"");
+                    var s = mealName.Split('・');
+                    setdishesIndex = TimingName.IndexOf(s[0]);
+                    mealName = s[1];
                 }
                 mealIndex = File.SetDishes[setdishesIndex].meals.IndexOf(File.SetDishes[setdishesIndex].meals
-                    .Where(m=>m.MealName==mealName).First());
+                    .Where(m => m.MealName == mealName).First());
                 return File.SetDishes[setdishesIndex].meals[mealIndex].Foods[e.RowIndex];
-            }          
+            }
         }
 
         private void Chart_MouseClick(object sender, MouseEventArgs e)
