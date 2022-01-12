@@ -23,18 +23,18 @@ namespace えいようちゃん
         private void ReferenceValueForm_Load(object sender, EventArgs e)
         {
             NutrientDataGridView.Rows.Clear();
-            for (int i = 0; i < MainForm.File.IndicateNutrient.Count; i++)
+            foreach(var ir in MainForm.File.Indicate_ReferenceNutrient)
             {
-                if (i == (int)NutrientDataColumn.refuse) continue;
-                if (MainForm.File.IndicateNutrient[i]==0)
+                if (ir.ColumnIndex == (int)NutrientDataColumn.refuse - 1) continue;
+                if(ir.ReferenceValue==0)
                 {
-                    NutrientDataGridView.Rows.Add(i, NutrientsForm.NutrientsName[i], "なし");
+                    NutrientDataGridView.Rows.Add(ir.ColumnIndex,MainForm.FoodCompositionItems.NutrientsNames[ir.ColumnIndex], "なし");
                 }
-                else if (MainForm.File.IndicateNutrient[i]> 0)
+                else
                 {
-                    NutrientDataGridView.Rows.Add(i, NutrientsForm.NutrientsName[i], MainForm.File.IndicateNutrient[i]);
+                    NutrientDataGridView.Rows.Add(ir.ColumnIndex,MainForm.FoodCompositionItems.NutrientsNames[ir.ColumnIndex], ir.ReferenceValue);
                 }
-            }
+            }            
         }
 
         /// <summary>
@@ -46,14 +46,13 @@ namespace えいようちゃん
         {
             if(NutrientDataGridView.Rows.Count==0) return;//一列目はlabel
 
-            foreach(var nutrient in NutrientDataGridView.Rows.Cast<DataGridViewRow>())
+            for(int i=0;i< NutrientDataGridView.Rows.Count;i++)
             {
-                var index = int.Parse(nutrient.Cells[0].Value.ToString());//nutrient.Cells[0]=栄養素の食品成分表上の順番,Form上では非表示
-
-                if (float.TryParse(nutrient.Cells[2].Value.ToString(), out float value))//nutrient.Cells[2]=入力内容
+                var cellStr = NutrientDataGridView.Rows[i].Cells[2].Value.ToString();
+                if (cellStr!="なし")
                 {
-                    MainForm.File.IndicateNutrient[index] = value;
-                }
+                    MainForm.File.Indicate_ReferenceNutrient[i] =  new NutrientColumn(int.Parse(NutrientDataGridView.Rows[i].Cells[0].Value.ToString()), float.Parse(cellStr));
+                }                    
             }
             var _ = MainForm.UpdateMainFormAsync();
         }

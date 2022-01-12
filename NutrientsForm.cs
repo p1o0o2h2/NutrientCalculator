@@ -10,17 +10,12 @@ namespace えいようちゃん
     /// 表示する栄養素を設定する
     /// </summary>
     public partial class NutrientsForm : Form
-    {
-        /// <summary>
-        /// 栄養素の名前と単位、順番はデータベースのカラム順
-        /// </summary>
-        public static List<string> NutrientsName = new List<string>();        
+    {  
         List<CheckBox> CheckBoxes= new List<CheckBox>();
 
         public NutrientsForm()
         {
             InitializeComponent();
-            CreateNutrientNames();
             CreatecheckBoxes();             
         }
 
@@ -32,91 +27,20 @@ namespace えいようちゃん
         private void NutrientsForm_Activated(object sender, EventArgs e)
         {
             CheckBoxes[0].Checked = MainForm.File.IsDisplayMaterialQuanatity;
-            if(MainForm.File.IndicateNutrient.Count==0) return;
+            if(MainForm.File.Indicate_ReferenceNutrient.Count==0) return;
 
-            int checkBoxesIndex = 1;
-            int indicateIndex = NutrientsName.Count - (CheckBoxes.Count - 1);
+            var ir = MainForm.File.Indicate_ReferenceNutrient.Select(ir=>ir.ColumnIndex).ToList();
 
-            while(indicateIndex<NutrientsName.Count)
+            foreach(var indicate in ir)
             {
-                if(MainForm.File.IndicateNutrient[indicateIndex] >= 0)//
-                {
-                    CheckBoxes[checkBoxesIndex].Checked = true;
-                }
-                indicateIndex++;
-                checkBoxesIndex++;
+                CheckBoxes[indicate + 1].Checked = true;
             }
         }
 
         /// <summary>
         /// データベースから各栄養素の名前や単位を取得し、ソフト内での表記を決める、TextMoldに一部引っ越し？
         /// </summary>
-        void CreateNutrientNames()
-        {
-            var dataTabel = ConnectSQL.GetCompositionName();
-
-            for (int i = 0; i < dataTabel.Rows.Count; i++)
-            {
-                var datarow = dataTabel.Rows[i].ItemArray;
-
-                if (datarow[^1].GetType() == typeof(DBNull))//単位がない
-                {
-                    NutrientsName.Add(datarow[0].ToString());
-                }
-                else if (datarow[2].GetType() == typeof(DBNull))//詳細2がない
-                {
-                    var dr1 = ConvertNO_NIYORU(datarow[1].ToString());
-                    NutrientsName.Add($"{dr1}({datarow[^2]})");
-                }
-                else if (datarow[3].GetType() == typeof(DBNull))//詳細3がない
-                {
-                    var dr2 = ConvertNO_NIYORU(datarow[2].ToString());
-                    NutrientsName.Add($"{dr2}({datarow[^2]})");
-                }
-                else
-                {
-                    var dr2 = ConvertNO_NIYORU(datarow[2].ToString());
-                    var dr3 = ConvertNO_NIYORU(datarow[3].ToString().Replace(datarow[2].ToString(), ""));
-                    NutrientsName.Add($"{dr2}\n{dr3}({datarow[^2]})");
-                }
-            }
-
-            //string NewlineText(string s)
-            //{
-            //    int newlineNumber = 10;
-            //    string rtn = s;
-
-            //    if (s.Length > newlineNumber)
-            //    {
-            //        rtn = s.Insert(newlineNumber, "\n");
-            //    }
-            //    return rtn;
-            //}
-
-            string ConvertNO_NIYORU(string s)
-            {
-                string rtn = s;
-                if (s.Contains("の"))
-                {
-                    rtn = s.Replace("の", "\n");
-                }
-
-                if (s.Contains("による"))
-                {
-                    var sp = s.Split("による");
-                    if (sp[sp.Length - 1] == "")
-                    {
-                        rtn = s.Replace("による", "");
-                    }
-                    else
-                    {
-                        rtn = s.Replace("による", "\n");
-                    }
-                }
-                return rtn;
-            }
-        }
-
+        
         /// <summary>
         /// チェックボックス生成
         /// </summary>
@@ -127,17 +51,21 @@ namespace えいようちゃん
             int posY = 10;
 
             var checkboxTexts = new List<string>{ "粗使用量(g)"};
-            checkboxTexts.AddRange(NutrientsName);
+            checkboxTexts.AddRange(MainForm.FoodCompositionItems.NutrientsNames);
 
-            for(int i=0;i<checkboxTexts.Count;i++)
+            int boxCount = 0;
+            int textCount = 0;
+            while(textCount<checkboxTexts.Count)
             {
-                if(!checkboxTexts[i].Contains('('))
+                if(!checkboxTexts[textCount].Contains('('))
                 {
+                    CheckBoxes.Add(null);
+                    textCount++;
                     continue;
                 }
 
                 CheckBox checkBox = new CheckBox();
-                checkBox.Text = checkboxTexts[i];
+                checkBox.Text = checkboxTexts[textCount];
                 checkBox.Font = new Font("Yu Gothic UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
                 checkBox.Location = new Point(posX, posY);
                 checkBox.Checked = false;
@@ -145,9 +73,11 @@ namespace えいようちゃん
                 CheckBoxes.Add(checkBox);
                 this.Controls.Add(CheckBoxes.Last());
 
-                if (CheckBoxes.Count!= 0&& CheckBoxes.Count % 11 == 0)
+                textCount++;
+                boxCount++;
+                if (boxCount % 11 == 0)
                 {
-                    posX = CheckBoxes.Count / 10 * 280 + 10;
+                    posX = boxCount / 10 * 280 + 10;
                     posY = 10;
                 }               
                 else
@@ -155,51 +85,37 @@ namespace えいようちゃん
                     posY += 70;
                 }
 
-                if (i < CheckBoxes.Count - 2 && (checkboxTexts.Count>i+1&&checkboxTexts[i+1].Contains("\n")))
+                if (checkboxTexts.Count>textCount&&checkboxTexts[textCount].Contains("\n"))
                 {
                     posY -= 8;
-                }
+                }                
             }
         }
 
         /// <summary>
-        /// 非栄養素=-2、非表示=-1、表示=0
+        ///
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void DisplayNutrientsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             MainForm.File.IsDisplayMaterialQuanatity = CheckBoxes[0].Checked;
+            var ir = MainForm.File.Indicate_ReferenceNutrient;
 
-           while (NutrientsName.Count> MainForm.File.IndicateNutrient.Count)
-           {
-                MainForm.File.IndicateNutrient.Add(0);
-           }
-
-            int indicateIndex = 0;
-
-            while(indicateIndex< NutrientsName.Count - (CheckBoxes.Count-1))//粗使用量はNutrientNameと無関係
+            for (int i=1;i<CheckBoxes.Count; i++)
             {
-                MainForm.File.IndicateNutrient[indicateIndex] = -2;
-                indicateIndex++;
-            }
-
-            int checkBoxesIndex = 1;
-            while (indicateIndex<MainForm.File.IndicateNutrient.Count)
-            {
-                if (MainForm.File.IndicateNutrient[indicateIndex] > 0) { /*なし*/}
-                else if (CheckBoxes[checkBoxesIndex].Checked)
+                if (CheckBoxes[i] == null) continue;
+                bool iscontain = ir.Any(irr => irr.ColumnIndex == i-1);
+                if (CheckBoxes[i].Checked && !iscontain)//新しく追加
                 {
-                    MainForm.File.IndicateNutrient[indicateIndex] = 0;
+                    ir.Add(new NutrientColumn(i-1,0));
                 }
-                else
+                else if (!CheckBoxes[i].Checked && iscontain)//削除
                 {
-                    MainForm.File.IndicateNutrient[indicateIndex] = -1;
+                   ir.Remove(ir.Where(irr => irr.ColumnIndex == i-1).First());
                 }
-                indicateIndex++;
-                checkBoxesIndex++;
             }
-
+            ir.Sort((a, b) => a.ColumnIndex - b.ColumnIndex);
             var _=MainForm.UpdateMainFormAsync();
             this.Visible = false;
             e.Cancel = true;

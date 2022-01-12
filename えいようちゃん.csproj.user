@@ -13,6 +13,9 @@
     <Compile Update="NutrientsForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="OutputSettingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="ReferenceValueForm.cs">
       <SubType>Form</SubType>
     </Compile>

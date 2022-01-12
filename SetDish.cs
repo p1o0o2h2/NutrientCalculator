@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 
@@ -116,5 +117,19 @@ namespace えいようちゃん
                 public Food() { }
             }
         }       
-    }      
+    }
+    
+    public class NutrientColumn
+    {
+        public int ColumnIndex { get; set; }
+        public float ReferenceValue { get; set; }
+
+        public NutrientColumn(int index, float value)
+        {
+            ColumnIndex = index;
+            ReferenceValue = value;
+        }
+
+        public NutrientColumn() { }
+    }
 }

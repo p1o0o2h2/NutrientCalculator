@@ -64,7 +64,7 @@ namespace えいようちゃん
                         pickupIndex++;
                         continue;
                     }
-                    var value = Math.Round(MainForm.File.SetDishes[i].SumNutrient[pickup[pickupIndex]], MainForm.NutrientSigFigs[pickup[pickupIndex]]);
+                    var value = Math.Round(MainForm.File.SetDishes[i].SumNutrient[pickup[pickupIndex]], MainForm.FoodCompositionItems.NutrientsSigFigs[pickup[pickupIndex]]);
                     nr.SetField(columnIndex, value);
                     pickupIndex++;
                     columnIndex++;
@@ -76,7 +76,7 @@ namespace えいようちゃん
             sumnr.SetField(0, "合計");
             for (int i = 0; i < pickup.Count; i++)
             {               
-                var value = Math.Round(MainForm.File.SumNutrient[pickup[i]], MainForm.NutrientSigFigs[pickup[i]]);
+                var value = Math.Round(MainForm.File.SumNutrient[pickup[i]], MainForm.FoodCompositionItems.NutrientsSigFigs[pickup[i]]);
                 sumnr.SetField(i+1, value);
             }
             dataTable.Rows.Add(sumnr);
@@ -118,7 +118,7 @@ namespace えいようちゃん
                         pickupIndex++;
                         continue;
                     }
-                    var value = Math.Round(meals[i].SumNutrient[pickup[pickupIndex]], MainForm.NutrientSigFigs[pickup[pickupIndex]]);
+                    var value = Math.Round(meals[i].SumNutrient[pickup[pickupIndex]], MainForm.FoodCompositionItems.NutrientsSigFigs[pickup[pickupIndex]]);
                     nr.SetField(columnIndex, value);
                     pickupIndex++;
                     columnIndex++;
@@ -195,7 +195,7 @@ namespace えいようちゃん
                     }
                     continue;
                 }
-                var value = Math.Round(MainForm.File.SumNutrient[indicateIndex[i]], MainForm.NutrientSigFigs[indicateIndex[i]]);
+                var value = Math.Round(MainForm.File.SumNutrient[indicateIndex[i]], MainForm.FoodCompositionItems.NutrientsSigFigs[indicateIndex[i]]);
                 mealsumrow.SetField(columnIndex, value);
                 columnIndex++;
             }
@@ -237,7 +237,7 @@ namespace えいようちゃん
                 {
                     continue;
                 }               
-                var name = string.Join("\n(", NutrientsForm.NutrientsName[p].Split("("));
+                var name = string.Join("\n(", MainForm.FoodCompositionItems.NutrientsNames[p].Split("("));
                 dataTable.Columns.Add(new DataColumn(name));
             }
             return dataTable;
@@ -277,7 +277,7 @@ namespace えいようちゃん
                     }
                     continue;
                 }
-                var value = Math.Round(MainForm.File.SumNutrient[indicateIndex[i]], MainForm.NutrientSigFigs[indicateIndex[i]]);
+                var value = Math.Round(MainForm.File.SumNutrient[indicateIndex[i]], MainForm.FoodCompositionItems.NutrientsSigFigs[indicateIndex[i]]);
                 sumnr.SetField(columnIndex, value);
                 columnIndex++;
             }
@@ -376,7 +376,7 @@ namespace えいようちゃん
 
                 for (int i = 0; i < pickup.Count; i++)
                 {
-                    rtn[0][nutrientStartIndex + isDay + i] = NutrientsForm.NutrientsName[pickup[i]];
+                    rtn[0][nutrientStartIndex + isDay + i] = MainForm.FoodCompositionItems.NutrientsNames[pickup[i]];
                 }
 
             }
@@ -438,7 +438,7 @@ namespace えいようちゃん
 
                 for (int i = 0; i < pickup.Count; i++)
                 {
-                    var value = Math.Round(meal.SumNutrient[pickup[i]], MainForm.NutrientSigFigs[pickup[i]]).ToString();
+                    var value = Math.Round(meal.SumNutrient[pickup[i]], MainForm.FoodCompositionItems.NutrientsSigFigs[pickup[i]]).ToString();
                     rtn.Last()[nutrientStartIndex + isDay + i] = value;
                 }
             }
@@ -461,7 +461,7 @@ namespace えいようちゃん
                 var setdish = MainForm.File.SetDishes[setdishIndex];
                 for (int i = 0; i < pickup.Count; i++)
                 {
-                    var value = Math.Round(setdish.SumNutrient[pickup[i]],MainForm.NutrientSigFigs[pickup[i]]).ToString();
+                    var value = Math.Round(setdish.SumNutrient[pickup[i]], MainForm.FoodCompositionItems.NutrientsSigFigs[pickup[i]]).ToString();
                     rtn.Last()[nutrientStartIndex + isDay + i] = value;
                 }
             }
@@ -479,7 +479,7 @@ namespace えいようちゃん
                     {
                         continue;
                     }
-                    var value = Math.Round(MainForm.File.SumNutrient[pickup[i]], MainForm.NutrientSigFigs[pickup[i]]).ToString();
+                    var value = Math.Round(MainForm.File.SumNutrient[pickup[i]], MainForm.FoodCompositionItems.NutrientsSigFigs[pickup[i]]).ToString();
                     rtn.Last()[nutrientStartIndex + isDay + i] = value;
                 }
             }

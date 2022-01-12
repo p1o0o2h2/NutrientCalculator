@@ -11,13 +11,9 @@ namespace えいようちゃん
     public partial class MainForm : Form
     {
         /// <summary>
-        /// 食品成分表のデータ　key=分類 value(Item1=食品番号,Item2=食品名,Item3=省略した食品名)
+        /// 栄養素のデータ
         /// </summary>
-        public static Dictionary<int, List<(int, string,string)>> FoodCompositionItems = new Dictionary<int, List<(int, string,string)>>();
-        /// <summary>
-        /// 栄養素ごとの有効数字
-        /// </summary>
-        public static List<int> NutrientSigFigs;
+        public static FoodCompositionItems FoodCompositionItems;
         //checkboxの生成に時間がかかるのでフィールドに持たせている
         NutrientsForm NutrientsForm;
         static OperateTableFigure OperateTableFigure;
@@ -32,14 +28,12 @@ namespace えいようちゃん
         public MainForm()
         {
             InitializeComponent();
-
             Task.Run(() =>
-            {
-                NutrientsForm = new NutrientsForm();                
+            {               
                 try
                 {
-                    SetNutrientSigFigs();
-                    SetFoodCompositionItems();
+                    FoodCompositionItems = new FoodCompositionItems();
+                    NutrientsForm = new NutrientsForm();
                 }
                 catch
                 {
@@ -47,36 +41,6 @@ namespace えいようちゃん
                     return;
                 }               
             });
-
-            //NutrientSigFigsの設定、2437 卯の花煎りが最も都合よいため読み込んで使う
-            void SetNutrientSigFigs()
-            {
-                List<string> unohana = ConnectSQL.GetFoodCompositionValue(2437);
-                NutrientSigFigs = new List<int>();
-                foreach (var o in unohana)
-                {
-                    var okara = TextMold.ReplaceKAKKO(o).Split('.');
-                    if (okara.Length == 2)
-                    {
-                        NutrientSigFigs.Add(okara[1].Length);
-                    }
-                    else
-                    {
-                        NutrientSigFigs.Add(0);
-                    }
-                }
-            }
-
-            //SetFoodCompositionItemsの初期化
-            void SetFoodCompositionItems()
-            {
-                for (int i = 0; i < 18; i++)//食品分類は1から18までの18こ
-                {
-                    FoodCompositionItems.Add(i, null);
-                    var names = ConnectSQL.GetFoodCompositionFoods(i + 1);//1はじまりなので1足す
-                    FoodCompositionItems[i] = names.Select(n => (n.Item1, n.Item2, TextMold.MakeShortFoodName(n.Item2))).ToList();
-                }
-            }
         }
         
         /// <summary>
@@ -101,11 +65,11 @@ namespace えいようちゃん
         {
             Task t =Task.Run(() => 
             {
-                while (NutrientSigFigs == null||NutrientSigFigs.Count==0)
+                while (FoodCompositionItems.NutrientsSigFigs == null|| FoodCompositionItems.NutrientsSigFigs.Count==0)
                 {
                     Task.Delay(1000);
                 }
-                File.CalculateSumNutrient(NutrientSigFigs);
+                File.CalculateSumNutrient(FoodCompositionItems.NutrientsSigFigs);
             });
             await t;
             OperateTableFigure.SetDefaltTableFigure();
@@ -237,8 +201,8 @@ namespace えいようちゃん
                 if(NutrientsForm != null)
                 {
                     this.Cursor = Cursors.Default;
-                    NutrientsForm.Show();
-                    return;
+                    NutrientsForm.Show(); 
+                    break;
                 }                
             }
         }
@@ -300,7 +264,7 @@ namespace えいようちゃん
 
         private void ResultDataGridView_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (ResultDataGridView.Columns[1].HeaderText != "純使用量\n(g)") return;
+            if (ResultDataGridView.Columns.Count<2||ResultDataGridView.Columns[1].HeaderText != "純使用量\n(g)") return;
 
             var dgv = (DataGridView)sender;
             var changeCell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];

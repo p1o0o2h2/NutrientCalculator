@@ -112,8 +112,8 @@ namespace えいようちゃん
                         break;
                     case (int)FileType.set:
                         StanderdListBox.Visible = true;
-                        MealTypeBox.Visible = true;
-                        MealTypeLabel.Visible = true;
+                        //MealTypeBox.Visible = true;
+                        //MealTypeLabel.Visible = true;
                         NameTextBox.Visible = true;
                         NameLabel.Visible = true;
                         SetDishButton.Visible = true;
@@ -125,8 +125,8 @@ namespace えいようちゃん
                         oneday.ForEach(o => o.Visible = true);
                         onedayLabel.ForEach(o => o.Visible = true);
                         StanderdListBox.SelectedIndex = -1;
-                        MealTypeBox.Visible = true;
-                        MealTypeLabel.Visible = true;
+                        //MealTypeBox.Visible = true;
+                        //MealTypeLabel.Visible = true;
                         TimingLabel.Visible = true;
                         TimingComboBox.Visible = true;
                         NameTextBox.Visible = true;
@@ -216,6 +216,7 @@ namespace えいようちゃん
             else//既存の料理の名称や設定を変更する場合
             {
                 MainForm.File.SetDishes[TimingComboBox.SelectedIndex + 1].meals[selectedIndex].MealType= MealTypeBox.SelectedIndex - 1;
+                MainForm.File.SetDishes[TimingComboBox.SelectedIndex + 1].meals[selectedIndex].MealName = NameTextBox.Text;
             }
 
             //
@@ -227,7 +228,6 @@ namespace えいようちゃん
             ReflectSetDishes();
 
             NameTextBox.Text = "";
-            TimingComboBox.SelectedIndex = -1;
             MealTypeBox.SelectedIndex = -1;
         }
 

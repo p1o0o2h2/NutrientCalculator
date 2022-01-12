@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace えいようちゃん
 {
@@ -14,13 +15,10 @@ namespace えいようちゃん
         /// </summary>
         public SetDish[] SetDishes { get; set; } = new SetDish[5];
         public int FileType { get; set; } = -2;
-        /// <summary>
-        /// 表示する栄養素と基準値 非栄養素=-2、非表示=-1、表示=0、基準あり=その値、栄養素の食品成分表での順番に並んでいる
-        /// </summary>
-        public List<float> IndicateNutrient { get; set; } = new List<float>();
-
+        public List<NutrientColumn> Indicate_ReferenceNutrient { get; set; } = new List<NutrientColumn>();
         public int ServePeople { get; set; } = 1;
         public string FilePath = "";
+        [JsonIgnore]
         public string FileName{ get {return FilePath.Split('\\').Last().Replace(".json", "");} }
         public List<float> SumNutrient = new List<float>();
         public bool IsDisplayMaterialQuanatity { get; set; } = false;

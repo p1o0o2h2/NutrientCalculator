@@ -36,3 +36,4 @@ C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Rele
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\ref\えいようちゃん.dll
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\えいようちゃん.pdb
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\えいようちゃん.genruntimeconfig.cache
+C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Release\net5.0-windows\えいようちゃん.OutputSettingForm.resources

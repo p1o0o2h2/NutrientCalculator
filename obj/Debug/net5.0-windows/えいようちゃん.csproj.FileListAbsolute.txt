@@ -36,3 +36,4 @@ C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\bin\Debu
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\bin\Debug\net5.0-windows\DocumentFormat.OpenXml.dll
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\bin\Debug\net5.0-windows\ExcelNumberFormat.dll
 C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Debug\net5.0-windows\えいようちゃん.SetDishMealForm.resources
+C:\Users\Arisa\source\repos\えいようちゃん\えいようちゃん\obj\Debug\net5.0-windows\えいようちゃん.OutputSettingForm.resources

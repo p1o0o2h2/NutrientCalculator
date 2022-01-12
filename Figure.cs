@@ -26,17 +26,17 @@ namespace えいようちゃん
         }
 
         /// <summary>
-        /// 目標値が設定されている場合、グラフを表示する
+        /// 目標値が設定されている場合、グラフを表示する 横軸100%以上
         /// </summary>
-        public void MakeCompareChart(List<int>pickup)
+        public void MakeCompareChart()
         {
             if(MainForm.File==null||MainForm.File.SumNutrient.Count==0) return;
-            if (!MainForm.File.IndicateNutrient.Any(ind=>ind>0)) return;//比較するものがあるか
+            if (!MainForm.File.Indicate_ReferenceNutrient.Any(ir=>ir.ReferenceValue>0)) return;//比較するものがあるか
 
             ClearChart();
             IsFoodFigure = false;
-            pickup.Reverse();//上からエネルギー→廃棄率　にしたい
-            var haveRef = pickup.Where(ii => MainForm.File.IndicateNutrient[ii] > 0).ToList();
+            var haveRef = MainForm.File.Indicate_ReferenceNutrient.Where(ir => ir.ReferenceValue > 0).ToList();
+            haveRef.Reverse();//上からエネルギー→廃棄率　にしたい
 
             Chart.Series.Clear();
             Chart.ChartAreas[0].AxisY.Title = "充足率(%)";
@@ -48,10 +48,10 @@ namespace えいようちゃん
                 Chart.Series.Last().ChartType = SeriesChartType.StackedBar;
                 Chart.Series.Last().LegendText = OperateTableFigure.TimingName[i];
 
-                for (int j = 0; j < haveRef.Count; j++)
+                foreach(var ir in haveRef)
                 {
-                    int value = (int)(MainForm.File.SetDishes[i].SumNutrient[haveRef[j]] / MainForm.File.IndicateNutrient[haveRef[j]] * 100);
-                    var name = TextMold.NewLineFigureItemName(NutrientsForm.NutrientsName[haveRef[j]]);
+                    var name = TextMold.NewLineFigureItemName(MainForm.FoodCompositionItems.NutrientsNames[ir.ColumnIndex]);
+                    int value = (int)(MainForm.File.SetDishes[i].SumNutrient[ir.ColumnIndex] / ir.ReferenceValue * 100);
                     Chart.Series.Last().Points.AddXY(name, value);
                 }
             }
@@ -67,7 +67,7 @@ namespace えいようちゃん
             ClearChart();
             Chart.Series.Add(new Series());
             Chart.Series[0].ChartType = SeriesChartType.StackedBar;
-            Chart.ChartAreas[0].AxisY.Title = NutrientsForm.NutrientsName[nutrientIndex];
+            Chart.ChartAreas[0].AxisY.Title =MainForm.FoodCompositionItems.NutrientsNames[nutrientIndex];
 
             IsFoodFigure =true;
             var pickupFood_Index = new List<(SetDish.Meal.Food, int,int)>();

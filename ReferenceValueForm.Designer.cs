@@ -32,7 +32,7 @@ namespace えいようちゃん
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.NutrientDataGridView = new System.Windows.Forms.DataGridView();
-            this.Index = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NutrientIndex = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NutrientColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RefernceValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.NutrientDataGridView)).BeginInit();
@@ -53,7 +53,7 @@ namespace えいようちゃん
             this.NutrientDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.NutrientDataGridView.ColumnHeadersHeight = 34;
             this.NutrientDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Index,
+            this.NutrientIndex,
             this.NutrientColumn,
             this.RefernceValueColumn});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -73,13 +73,13 @@ namespace えいようちゃん
             this.NutrientDataGridView.TabIndex = 0;
             this.NutrientDataGridView.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.NutrientDataGridView_CellValidating);
             // 
-            // Index
+            // NutrientIndex
             // 
-            this.Index.HeaderText = "Index";
-            this.Index.MinimumWidth = 8;
-            this.Index.Name = "Index";
-            this.Index.ReadOnly = true;
-            this.Index.Visible = false;
+            this.NutrientIndex.HeaderText = "Column1";
+            this.NutrientIndex.MinimumWidth = 8;
+            this.NutrientIndex.Name = "NutrientIndex";
+            this.NutrientIndex.ReadOnly = true;
+            this.NutrientIndex.Visible = false;
             // 
             // NutrientColumn
             // 
@@ -114,7 +114,7 @@ namespace えいようちゃん
         #endregion
 
         private System.Windows.Forms.DataGridView NutrientDataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Index;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NutrientIndex;
         private System.Windows.Forms.DataGridViewTextBoxColumn NutrientColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn RefernceValueColumn;
     }

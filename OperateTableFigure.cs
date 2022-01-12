@@ -33,20 +33,20 @@ namespace えいようちゃん
                 Table.ClearTable();
                 return;
             }
-            var pickup = PickupIndicateNutrient();
 
+            var indicate = MainForm.File.Indicate_ReferenceNutrient.Select(ir => ir.ColumnIndex).ToList();
             if (MainForm.File.FileType == (int)FileType.day)
             {
-                Table.MakeDayTable(pickup);
+                Table.MakeDayTable(indicate);
             }
             else
             {
-                Table.MakeSetTable(0,pickup);
+                Table.MakeSetTable(0,indicate);
             }
 
-            if(pickup.Count>0)
+            if(MainForm.File.Indicate_ReferenceNutrient.Count>0)
             {
-                Figure.MakeCompareChart(pickup);
+                Figure.MakeCompareChart();
             }
         }
 
@@ -72,25 +72,27 @@ namespace えいようちゃん
             
             void ReturnUpperTable()
             {
+                var indicate = MainForm.File.Indicate_ReferenceNutrient.Select(ir => ir.ColumnIndex).ToList();
                 if (MainForm.File.FileType == (int)FileType.day && Table.Mode == 1)
                 {
-                    Table.MakeDayTable(PickupIndicateNutrient());
+                    Table.MakeDayTable(indicate);
                 }
                 else if (Table.Mode == 0)
                 {
-                    Table.MakeSetTable(Table.SetDishesIndex,PickupIndicateNutrient());
+                    Table.MakeSetTable(Table.SetDishesIndex,indicate);
                 }
             }
 
             void DisplayUnderTable()
             {
-                if(Table.Mode==2)
+                var indicate = MainForm.File.Indicate_ReferenceNutrient.Select(ir => ir.ColumnIndex).ToList();
+                if (Table.Mode==2)
                 {
-                    Table.MakeSetTable(rowIndex+1,PickupIndicateNutrient());
+                    Table.MakeSetTable(rowIndex+1,indicate);
                 }
                 else if (Table.Mode == 1)
                 {
-                    Table.MakeMealTable(Table.SetDishesIndex,rowIndex,PickupIndicateNutrient());
+                    Table.MakeMealTable(Table.SetDishesIndex,rowIndex,indicate);
                 }
             }
 
@@ -101,7 +103,7 @@ namespace えいようちゃん
                 {
                     columnblank++;
                 }
-                var nutrientIndex = PickupIndicateNutrient()[columnIndex - columnblank];
+                var nutrientIndex = MainForm.File.Indicate_ReferenceNutrient.Select(ir=>ir.ColumnIndex).ToList()[columnIndex - columnblank];
                 FoodList = Figure.MakeHighContentChart(nutrientIndex);
             }
         }
@@ -113,40 +115,26 @@ namespace えいようちゃん
         public void FigureCilcked(int clickedIndex)
         {
             if (MainForm.File.SumNutrient.Count == 0) return;
-            if(clickedIndex==-1)
+            if (clickedIndex==-1)
             {
-                Figure.MakeCompareChart(PickupIndicateNutrient());
+                Figure.MakeCompareChart();
             }
             else if(Figure.IsFoodFigure)
             {
-                Table.MakeMealTable(FoodList[clickedIndex].Item2, FoodList[clickedIndex].Item3, PickupIndicateNutrient());
+                var indicate = MainForm.File.Indicate_ReferenceNutrient.Select(ir => ir.ColumnIndex).ToList();
+                Table.MakeMealTable(FoodList[clickedIndex].Item2, FoodList[clickedIndex].Item3,indicate);
             }
             else
             {
-                FoodList=Figure.MakeHighContentChart(PickupIndicateNutrient()[clickedIndex]);
+                var indicate= MainForm.File.Indicate_ReferenceNutrient.Where(ir=>ir.ReferenceValue>0).Select(ir => ir.ColumnIndex).ToList();
+                FoodList =Figure.MakeHighContentChart(indicate[indicate.Count-1-clickedIndex]);
             }
         }
 
         public List<List<string>>MakeOverrallTable()
         {
-            return Table.MakeOverrallTable(PickupIndicateNutrient());
-        }
-
-        /// <summary>
-        /// 表示する栄養素のデータベースのカラム上でのインデックスを調べる
-        /// </summary>
-        /// <returns> 表示する栄養素のデータベースのカラム上でのインデックス</returns>
-        List<int> PickupIndicateNutrient()
-        {
-            var pickup = new List<int>();
-            for (int i = 0; i < MainForm.File.IndicateNutrient.Count; i++)
-            {
-                if (MainForm.File.IndicateNutrient[i] >= 0)
-                {
-                    pickup.Add(i);
-                }
-            }
-            return pickup;
-        }
+            var indicate = MainForm.File.Indicate_ReferenceNutrient.Select(ir => ir.ColumnIndex).ToList();
+            return Table.MakeOverrallTable(indicate);
+        }        
     }
 }

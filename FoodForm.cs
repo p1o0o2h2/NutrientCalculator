@@ -90,7 +90,7 @@ namespace えいようちゃん
         {           
             if(FoodCompositionComboBox.SelectedIndex==-1) return;            
             FoodCompositionListBox.Items.Clear();
-            FoodCompositionListBox.Items.AddRange(MainForm.FoodCompositionItems[FoodCompositionComboBox.SelectedIndex].Select(a => a.Item3).ToArray());
+            FoodCompositionListBox.Items.AddRange(MainForm.FoodCompositionItems.FoodItems[FoodCompositionComboBox.SelectedIndex].Select(a => a.Item3).ToArray());
         }
          
         /// <summary>
@@ -105,10 +105,10 @@ namespace えいようちゃん
             FoodCompositionListBox.Items.Clear();
             var text = FoodCompositionComboBox.Text;
             List<string> match = new List<string>();
-            for (int i = 0; i < MainForm.FoodCompositionItems.Count; i++)
+            for (int i = 0; i < MainForm.FoodCompositionItems.FoodItems.Count; i++)
             {                
                 //入力された文字列を正規の名前に含む食品をピックアップする
-                match.AddRange(MainForm.FoodCompositionItems[i].Where(f => f.Item2.Contains((text))).Select(ff => ff.Item3).ToList());
+                match.AddRange(MainForm.FoodCompositionItems.FoodItems[i].Where(f => f.Item2.Contains((text))).Select(ff => ff.Item3).ToList());
             }
             FoodCompositionListBox.Items.AddRange(match.ToArray());
         }
@@ -130,24 +130,15 @@ namespace えいようちゃん
             }
 
             var newfoodName = FoodCompositionListBox.SelectedItem.ToString();
-            int identify=-1;
-            if (FoodCompositionComboBox.SelectedIndex==-1&& FoodCompositionComboBox.Text!="")//検索結果から選択された場合
+            var identify = -1;
+
+            if (FoodCompositionComboBox.SelectedIndex == -1 && FoodCompositionComboBox.Text != "")//検索結果から選択された場合
             {
-                int i = 0;         
-                while (identify==-1)//その食品の属する群を探す
-                {
-                    var foodData= MainForm.FoodCompositionItems[i].Where(f => f.Item3 == newfoodName).FirstOrDefault();
-                    
-                    if(foodData!=(0,"",""))
-                    {
-                        identify = foodData.Item1;
-                    }
-                    i++;
-                }
+                identify = MainForm.FoodCompositionItems.FoodItems.SelectMany(fi => fi.Value.Where(fiv => fiv.Item3 == newfoodName)).First().Item1;
             }
             else//食品類リストから選択された場合
             {                
-                identify = MainForm.FoodCompositionItems[FoodCompositionComboBox.SelectedIndex][FoodCompositionListBox.SelectedIndex].Item1;                
+                identify = MainForm.FoodCompositionItems.FoodItems[FoodCompositionComboBox.SelectedIndex][FoodCompositionListBox.SelectedIndex].Item1;                
             }
             List<string> values = ConnectSQL.GetFoodCompositionValue(identify);
             MainForm.File.SetDishes[TimingComboBox.SelectedIndex + 1].meals[MealNameComboBox.SelectedIndex].Foods.Add(new SetDish.Meal.Food(newfoodName, identify, values));
