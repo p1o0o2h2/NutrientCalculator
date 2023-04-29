@@ -46,16 +46,16 @@ namespace えいようちゃん
             //調理済みは[2]以降→"料理"が含まれる
             if (splitedNames[0].Contains("料理"))
             {
-                string rtn = "";
+                string result = "";
                 for (int i = 2; i < splitedNames.Length; i++)
                 {
-                    if (rtn == splitedNames[i])
+                    if (result == splitedNames[i])
                     {
                         break;
                     }
-                    rtn += splitedNames[i];
+                    result += splitedNames[i];
                 }
-                return rtn;
+                return result;
             }
 
             for (int i = 0; i < splitedNames.Length; i++)
@@ -143,7 +143,7 @@ namespace えいようちゃん
         /// <returns></returns>
         public static string NewLineFigureItemName(string name)
         {
-            string rtn = "";
+            string result = "";
             foreach(var splitedName in name.Split('('))
             {
                 var r = "";
@@ -158,28 +158,28 @@ namespace えいようちゃん
 
                 if(splitedName.Contains(')'))//単位を戻す
                 {
-                    rtn = $"{rtn}({r}\n";
+                    result = $"{result}({r}\n";
                 }
                 else
                 {
-                    rtn += r+"\n";
+                    result += r+"\n";
                 }
             }
-            return rtn.TrimEnd();
+            return result.TrimEnd();
         }
 
         /// <summary>
         /// 文字列からかっこを消す
         /// </summary>
-        /// <param name="s"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        public static string ReplaceKAKKO(string s)
+        public static string ReplaceKAKKO(string input)
         {
-            if (s != "(0)" && s.Contains("("))
+            if (input != "(0)" && input.Contains("("))
             {
-                return s.Replace("(", "").Replace(")", "");
+                return input.Replace("(", "").Replace(")", "");
             }
-            return s;
+            return input;
         }
     }
 }
