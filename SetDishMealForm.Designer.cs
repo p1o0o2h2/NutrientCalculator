@@ -53,6 +53,7 @@ namespace えいようちゃん
             this.TimingComboBox = new System.Windows.Forms.ComboBox();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.SelectliftButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -225,7 +226,7 @@ namespace えいようちゃん
             // 
             this.MealTypeLabel.AutoSize = true;
             this.MealTypeLabel.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.MealTypeLabel.Location = new System.Drawing.Point(221, 327);
+            this.MealTypeLabel.Location = new System.Drawing.Point(234, 513);
             this.MealTypeLabel.Name = "MealTypeLabel";
             this.MealTypeLabel.Size = new System.Drawing.Size(57, 30);
             this.MealTypeLabel.TabIndex = 16;
@@ -237,7 +238,7 @@ namespace えいようちゃん
             this.MealTypeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MealTypeBox.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.MealTypeBox.FormattingEnabled = true;
-            this.MealTypeBox.Location = new System.Drawing.Point(221, 380);
+            this.MealTypeBox.Location = new System.Drawing.Point(234, 573);
             this.MealTypeBox.Name = "MealTypeBox";
             this.MealTypeBox.Size = new System.Drawing.Size(147, 38);
             this.MealTypeBox.TabIndex = 17;
@@ -259,7 +260,7 @@ namespace えいようちゃん
             // 
             this.NameLabel.AutoSize = true;
             this.NameLabel.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.NameLabel.Location = new System.Drawing.Point(26, 213);
+            this.NameLabel.Location = new System.Drawing.Point(26, 348);
             this.NameLabel.Name = "NameLabel";
             this.NameLabel.Size = new System.Drawing.Size(95, 30);
             this.NameLabel.TabIndex = 19;
@@ -269,7 +270,7 @@ namespace えいようちゃん
             // NameTextBox
             // 
             this.NameTextBox.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.NameTextBox.Location = new System.Drawing.Point(26, 265);
+            this.NameTextBox.Location = new System.Drawing.Point(26, 415);
             this.NameTextBox.Name = "NameTextBox";
             this.NameTextBox.Size = new System.Drawing.Size(342, 37);
             this.NameTextBox.TabIndex = 20;
@@ -279,7 +280,7 @@ namespace えいようちゃん
             // 
             this.TimingLabel.AutoSize = true;
             this.TimingLabel.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TimingLabel.Location = new System.Drawing.Point(26, 327);
+            this.TimingLabel.Location = new System.Drawing.Point(26, 513);
             this.TimingLabel.Name = "TimingLabel";
             this.TimingLabel.Size = new System.Drawing.Size(79, 30);
             this.TimingLabel.TabIndex = 21;
@@ -291,7 +292,7 @@ namespace えいようちゃん
             this.TimingComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.TimingComboBox.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.TimingComboBox.FormattingEnabled = true;
-            this.TimingComboBox.Location = new System.Drawing.Point(26, 380);
+            this.TimingComboBox.Location = new System.Drawing.Point(26, 573);
             this.TimingComboBox.Name = "TimingComboBox";
             this.TimingComboBox.Size = new System.Drawing.Size(150, 38);
             this.TimingComboBox.TabIndex = 22;
@@ -321,12 +322,24 @@ namespace えいようちゃん
             this.SelectliftButton.Visible = false;
             this.SelectliftButton.Click += new System.EventHandler(this.SelectLiftButton_Click);
             // 
-            // SelectTypeForm
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.button1.Location = new System.Drawing.Point(171, 333);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(197, 62);
+            this.button1.TabIndex = 25;
+            this.button1.Text = "献立データベース";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
+            // 
+            // SetDishMealForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(962, 775);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.SelectliftButton);
             this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.TimingComboBox);
@@ -350,7 +363,7 @@ namespace えいようちゃん
             this.Controls.Add(this.StanderdListBox);
             this.Controls.Add(this.TypeSelectComboBox);
             this.Controls.Add(this.label1);
-            this.Name = "SelectTypeForm";
+            this.Name = "SetDishMealForm";
             this.Text = "表の種類";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SelectTypeForm_FormClosed);
             this.Load += new System.EventHandler(this.SelectTypeForm_Load);
@@ -385,6 +398,7 @@ namespace えいようちゃん
         private System.Windows.Forms.ComboBox TimingComboBox;
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Button SelectliftButton;
+        private System.Windows.Forms.Button button1;
     }
 }
 

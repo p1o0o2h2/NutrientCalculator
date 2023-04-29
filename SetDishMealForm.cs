@@ -61,5 +61,10 @@ namespace えいようちゃん
         {
 
         }
+
+        private void MealTypeBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
